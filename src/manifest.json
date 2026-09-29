@@ -1,12 +1,12 @@
 {
-  "id": "your-github-username.example",
-  "name": "Example",
-  "description": "Example plugin for typora.",
-  "author": "author name",
-  "authorUrl": "https://github.com/your-github-username",
-  "repo": "your-github-username/typora-plugin-example",
+  "id": "typora-community-plugin.kanban",
+  "name": "Kanban",
+  "description": "Render Markdown files as an interactive Kanban board.",
+  "author": "plylrnsdy",
+  "authorUrl": "https://github.com/plylrnsdy",
+  "repo": "plylrnsdy/typora-plugin-kanban",
   "version": "1.0.0",
   "minAppVersion": "1.5.0",
-  "minCoreVersion": "2.7.7",
+  "minCoreVersion": "2.10.23",
   "platforms": ["win32", "linux", "darwin"]
 }

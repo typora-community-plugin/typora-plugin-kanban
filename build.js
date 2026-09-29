@@ -23,6 +23,8 @@ await esbuild.build({
   outdir: 'dist',
   format: 'esm',
   bundle: true,
+  jsx: 'automatic',
+  jsxImportSource: 'preact',
   minify: IS_PROD,
   sourcemap: IS_DEV,
   plugins: [

@@ -4,9 +4,16 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@typora-community-plugin/core': link:../typora-community-plugin@v2/packages/core
+
 importers:
 
   .:
+    dependencies:
+      preact:
+        specifier: ^10.29.8
+        version: 10.29.8
     devDependencies:
       '@babel/core':
         specifier: ^7.23.2
@@ -45,8 +52,8 @@ importers:
         specifier: npm:@typora-community-plugin/typora-types@^1.0.16
         version: '@typora-community-plugin/typora-types@1.0.16'
       '@typora-community-plugin/core':
-        specifier: ^2.7.7
-        version: 2.9.6
+        specifier: link:../typora-community-plugin@v2/packages/core
+        version: link:../typora-community-plugin@v2/packages/core
       archiver:
         specifier: ^5.3.2
         version: 5.3.2
@@ -812,9 +819,6 @@ packages:
     resolution: {integrity: sha512-dfUnCxiN9H4ap84DvD2ubjw+3vUNpstxa0TneY/Paat8a3R4uQZDLSvWjmznAY/DoahqTHl9V46HF/Zs3F29pg==}
     engines: {node: '>= 10.0.0'}
 
-  '@plylrnsdy/decorate.js@1.0.4':
-    resolution: {integrity: sha512-Sj6CnM2NC4vuTUYoGtxSOrlehfaQRariXIZ1L4TyQEls7r1eXahYgXcJkwqP+2g+v+NHyM1lXwZOOs5iic4P+Q==}
-
   '@rollup/plugin-babel@6.0.4':
     resolution: {integrity: sha512-YF7Y52kFdFT/xVSuVdjkV5ZdX/3YtmX0QulG+x0taQOtJdHYzVU61aSSkAgVJ7NOv6qPkIYiJSgSWWN/DM5sGw==}
     engines: {node: '>=14.0.0'}
@@ -1017,9 +1021,6 @@ packages:
 
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
-
-  '@typora-community-plugin/core@2.9.6':
-    resolution: {integrity: sha512-i062yebc7KAIXIy+s5UTMeMLVSU9Zr1WO+PsmJrKR278ZpTBZAWVlFQMMxY7kLey2UtLUJa6I4AsXrlreeUsrw==}
 
   '@typora-community-plugin/esbuild-plugin-typora@1.0.12':
     resolution: {integrity: sha512-iOEM8e0Y7/83dqVHm2HX9XglL0BD0t4NTbH4PKtea7ohrOxI/frkWb4nHW4iMoxp5mVBdCf5QUpcm3H6DeIfdQ==}
@@ -1354,6 +1355,14 @@ packages:
   picomatch@4.0.2:
     resolution: {integrity: sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==}
     engines: {node: '>=12'}
+
+  preact@10.29.8:
+    resolution: {integrity: sha512-ej2aVZ+vZ8WO7tvlQWRM9N63A0KzF9q4mWJfDUHgYaIofWY9hu74QdnQrjoPMmZi2/nZ5gN0bJCQF49xQqx09Q==}
+    peerDependencies:
+      preact-render-to-string: '>=5'
+    peerDependenciesMeta:
+      preact-render-to-string:
+        optional: true
 
   process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
@@ -2301,10 +2310,6 @@ snapshots:
       '@parcel/watcher-win32-x64': 2.5.1
     optional: true
 
-  '@plylrnsdy/decorate.js@1.0.4':
-    dependencies:
-      typescript: 5.8.3
-
   '@rollup/plugin-babel@6.0.4(@babel/core@7.27.1)(rollup@4.40.2)':
     dependencies:
       '@babel/core': 7.27.1
@@ -2439,10 +2444,6 @@ snapshots:
   '@types/node@16.18.0': {}
 
   '@types/resolve@1.20.2': {}
-
-  '@typora-community-plugin/core@2.9.6':
-    dependencies:
-      '@plylrnsdy/decorate.js': 1.0.4
 
   '@typora-community-plugin/esbuild-plugin-typora@1.0.12': {}
 
@@ -2787,6 +2788,8 @@ snapshots:
     optional: true
 
   picomatch@4.0.2: {}
+
+  preact@10.29.8: {}
 
   process-nextick-args@2.0.1: {}
 

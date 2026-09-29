@@ -9,3 +9,8 @@ declare module '*.css' {
   const content: Record<string, string>
   export default content
 }
+
+declare module '*.json' {
+  const v: any
+  export default v
+}

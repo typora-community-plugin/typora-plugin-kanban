@@ -1,3 +1,6 @@
-.typ-example-cls {
-  color: red;
-}
+// Typora Plugin Kanban — global style entry.
+//
+// 颜色 token 定义在 ./kanban/ui/variables.scss（只含颜色）。
+// 长度 / 间距 / 圆角 / 字号一律在各组件 SCSS 中直接写 rem 字面量。
+@use './kanban/ui/variables.scss';
+@use './kanban/kanban-view.scss';

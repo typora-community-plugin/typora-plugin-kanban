@@ -1,0 +1,7 @@
+packages:
+  - '*'
+allowBuilds:
+  '@parcel/watcher': false
+  esbuild: true
+overrides:
+  '@typora-community-plugin/core': link:../typora-community-plugin@v2/packages/core

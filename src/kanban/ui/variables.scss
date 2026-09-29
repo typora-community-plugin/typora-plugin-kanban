@@ -1,0 +1,37 @@
+// Typora Plugin Kanban — Design Tokens (COLORS ONLY)
+//
+// 约定：
+//   - 本文件**只定义颜色**相关的 `--typ-kanban-*` token。
+//   - 长度 / 间距 / 圆角 / 字号一律在组件 SCSS 中直接写 `rem` 字面量
+//     （如 `17rem`、`.75rem`、`.375rem`、`.875rem`），禁止在此定义长度变量。
+//   - 颜色优先消费 Typora 内部变量（`--bg-color`、`--text-color`、
+//     `--panel-border-color`、`--item-hover-bg-color`、`--primary-color`、
+//     `--select-text-bg-color` 等）；仅当 Typora 未提供时才在此定义。
+//   - 暗色模式只切换颜色 token，长度无需随主题切换。
+
+:root {
+  // tag chip（Typora 未提供对应变量）
+  --typ-kanban-tag-color: var(--primary-color);
+  --typ-kanban-tag-bg-color: rgba(128, 128, 128, .18);
+
+  // 日期（自定义语义色）
+  --typ-kanban-date-color: var(--text-color);
+  --typ-kanban-date-before-color: #c0392b;  // 已过期
+  --typ-kanban-date-after-color: #27ae60;   // 未来
+  --typ-kanban-date-today-color: var(--primary-color);
+
+  // 搜索命中
+  --typ-kanban-search-match-bg-color: var(--select-text-bg-color);
+  --typ-kanban-search-match-color: var(--text-color);
+
+  // 破坏性操作（菜单项 / 按钮）
+  --typ-kanban-danger-color: #c0392b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --typ-kanban-date-before-color: #e74c3c;
+    --typ-kanban-date-after-color: #2ecc71;
+    --typ-kanban-danger-color: #e74c3c;
+  }
+}

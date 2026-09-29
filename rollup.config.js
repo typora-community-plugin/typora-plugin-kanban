@@ -46,12 +46,14 @@ export default defineConfig({
     }),
     virtual(virtualModules),
     typoraPlugin(),
-    nodeResolve(),
+    nodeResolve({ browser: true }),
     commonjs(),
     typescript({
       compilerOptions: {
         ...compilerOptions,
         ...overrided,
+        jsx: 'react-jsx',
+        jsxImportSource: 'preact',
       },
     }),
     babel({
