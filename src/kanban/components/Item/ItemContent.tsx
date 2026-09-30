@@ -143,7 +143,7 @@ export function ItemContent(props: { item: Item; path: Path; hideMetadata?: bool
           if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); search(tag) }
         } : undefined}
       >
-        <Highlight text={tag} query={searchQuery} />
+        <i class="fa fa-tag"></i><Highlight text={' ' + tag.slice(1)} query={searchQuery} />
       </span>
     )
   }
@@ -177,7 +177,7 @@ export function ItemContent(props: { item: Item; path: Path; hideMetadata?: bool
       {!hideMetadata && (hasInlineMeta || metaTags.length > 0) && (
         <div class={c('item-metadata')}>
           {date && (
-            <span class={[c('item-metadata-date'), dateCls].filter(Boolean).join(' ')}>{dateText}</span>
+            <span class={[c('item-metadata-date'), dateCls].filter(Boolean).join(' ')}><i class="fa fa-calendar"></i> {dateText}</span>
           )}
           {metaTags.map(renderTag)}
           {inlineFields.map(field => (
