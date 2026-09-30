@@ -319,6 +319,11 @@ export default class extends Plugin<KanbanSettings> {
 
   // --- 事件处理 -----------------------------------------------------------
 
+  private isKanbanExtension(file: string): boolean {
+    const base = path.basename(file)
+    return /\.kanban\.(md|markdown)$/i.test(base)
+  }
+
   private isKanbanFile(filePath: string): boolean {
     if (!/\.(md|markdown)$/i.test(filePath)) return false
     try {
@@ -330,13 +335,23 @@ export default class extends Plugin<KanbanSettings> {
   }
 
   private onFileOpen(filePath: string): void {
-    if (!this.settings.get('auto-open')) return
     if (Date.now() - this._autoOpenGuard < 1000) return
 
     const leaf = this.app.workspace.activeLeaf
     if (!leaf || leaf.viewType === KanbanView.type) return
     if (leaf.state?.path !== filePath) return
-    if (!this.isKanbanFile(filePath)) return
+
+    let match: boolean
+    if (this.settings.get('auto-open-kanban-extension') && this.isKanbanExtension(filePath)) {
+      match = true
+    }
+    else if (this.settings.get('auto-open')) {
+      match = this.isKanbanFile(filePath)
+    }
+    else {
+      return
+    }
+    if (!match) return
 
     this.openAsKanban(leaf)
   }

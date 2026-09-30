@@ -108,6 +108,8 @@
     "optionTagActionSearch": "Search the board",
     "autoOpen": "Auto-open kanban files",
     "autoOpenDesc": "Open markdown files with kanban frontmatter as a board.",
+    "autoOpenKanbanExtension": "Auto-open *.kanban.md as board",
+    "autoOpenKanbanExtensionDesc": "Open files ending in .kanban.md / .kanban.markdown in the kanban view by default (no frontmatter required).",
     "showSearch": "Show search button",
     "showBoardSettings": "Show board settings button"
   },

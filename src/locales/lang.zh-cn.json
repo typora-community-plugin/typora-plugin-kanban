@@ -108,6 +108,8 @@
     "optionTagActionSearch": "在看板内搜索",
     "autoOpen": "自动打开看板文件",
     "autoOpenDesc": "打开含看板 frontmatter 的 Markdown 文件时自动进入看板视图。",
+    "autoOpenKanbanExtension": "自动打开 *.kanban.md 为看板",
+    "autoOpenKanbanExtensionDesc": "以 .kanban.md / .kanban.markdown 结尾的文件打开时默认使用看板视图（无需 frontmatter）。",
     "showSearch": "显示搜索按钮",
     "showBoardSettings": "显示看板设置按钮"
   },
