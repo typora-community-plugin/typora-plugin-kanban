@@ -33,9 +33,10 @@ export function Lane(props: { lane: LaneModel; index: number; variant?: 'board' 
     drag.isDroppingItems ? 'is-dropping' : '',
   ].filter(Boolean).join(' ')
 
+  const COLLAPSED_WIDTH_REM = 2.5
   const style = variant === 'list'
     ? { width: '100%', maxWidth: '100%' }
-    : { width: `${laneWidth}rem` }
+    : { width: collapsed ? `${COLLAPSED_WIDTH_REM}rem` : `${laneWidth}rem` }
 
   return (
     <div

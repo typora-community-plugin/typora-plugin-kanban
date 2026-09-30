@@ -25,6 +25,7 @@ export class KanbanStateManager {
   private actions = new Map<string, () => void>()
   private saveTimer: number | null = null
   private _selfWrite = false
+  private collapsedMap = new Map<number, boolean>()
   private disposed = false
 
   constructor(
@@ -76,7 +77,9 @@ export class KanbanStateManager {
   }
 
   newBoard(path: string, md: string): Board {
-    this.board = mdToBoard({ path, md })
+    const board = mdToBoard({ path, md })
+    this.applyCollapsed(board)
+    this.board = board
     this.notify()
     return this.board
   }
@@ -162,7 +165,22 @@ export class KanbanStateManager {
     for (const cb of this.stateReceivers) cb(this.board)
   }
 
+  private applyCollapsed(board: Board): void {
+    board.lanes.forEach((lane, i) => {
+      const c = this.collapsedMap.get(i)
+      if (c !== undefined) lane.collapsed = c
+    })
+  }
+
+  private syncCollapsed(): void {
+    this.collapsedMap.clear()
+    this.board.lanes.forEach((lane, i) => {
+      if (lane.collapsed) this.collapsedMap.set(i, true)
+    })
+  }
+
   private flush(): void {
+    this.syncCollapsed()
     const md = boardToMd(this.board)
     this._selfWrite = true
     try {

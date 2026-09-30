@@ -97,7 +97,12 @@ export function createBoardModifiers(m: KanbanStateManager): BoardModifiers {
     },
 
     updateLane(path, patch) {
-      set(b => updateLane(b, path, patch))
+      const isCollapseOnly = 'collapsed' in patch && Object.keys(patch).length === 1
+      if (isCollapseOnly) {
+        m.setState(b => updateLane(b, path, patch), { save: false })
+      } else {
+        set(b => updateLane(b, path, patch))
+      }
     },
 
     deleteLane(path) {
