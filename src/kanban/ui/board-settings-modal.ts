@@ -11,7 +11,7 @@ import { getSettingGroups, renderSettingControl } from '../settings-schema'
  */
 export function openBoardSettingsModal(stateManager: KanbanStateManager, i18n: KanbanI18n): void {
   const modal = new Modal({ className: 'typ-kanban-board-settings' })
-  modal.setHeader(i18n.t.setting.title)
+  modal.setHeader(i18n.t.setting.boardSettingsTitle)
 
   modal.setBody(body => {
     body.classList.add('typ-kanban-board-settings-body')
