@@ -29,6 +29,8 @@ export class KanbanView extends WorkspaceView {
 
   private _stateManager?: KanbanStateManager
   private rootEl?: HTMLElement
+  /** 上次打开的 stateManager，close→open 循环时复用，避免从磁盘重读丢失未保存内容。 */
+  private _previousState?: KanbanStateManager
 
   constructor(leaf: WorkspaceLeaf, private options: KanbanViewOptions) {
     super(leaf)
@@ -59,27 +61,42 @@ export class KanbanView extends WorkspaceView {
     }
     this.containerEl.innerHTML = ''
 
+    // 复用已有的 stateManager（close→open 循环时不清理，避免从磁盘重读丢失未保存内容）。
+    let sm: KanbanStateManager | undefined
+    if (this._stateManager && !this._stateManager.disposed) {
+      sm = this._stateManager
+    } else if (this._previousState && !this._previousState.disposed) {
+      // 复用上一次关闭前的 state，不重新解析磁盘内容。
+      sm = this._previousState
+    }
+
+    if (!sm) {
+      sm = new KanbanStateManager(this, mdToBoard({ path: this.filePath, md: this.readFile() }), {
+        getGlobalSettings: this.options.getGlobalSettings,
+      })
+      // 全新创建说明没有可用的旧 state，清理缓存
+      this._previousState = undefined
+    }
+
     this.rootEl = document.createElement('div')
     this.rootEl.className = 'typ-kanban-root'
     this.containerEl.appendChild(this.rootEl)
 
-    const md = this.readFile()
-    const board = mdToBoard({ path: this.filePath, md })
-    const stateManager = new KanbanStateManager(this, board, {
-      getGlobalSettings: this.options.getGlobalSettings,
-    })
-    stateManager.registerAction('view-as-markdown', () => {
+    sm.registerAction('view-as-markdown', () => {
       // 延后到当前事件循环之外，避免在视图关闭过程中卸载 Preact 树。
       setTimeout(() => this.options.openAsMarkdown(this.leaf), 0)
     })
-    this._stateManager = stateManager
+    this._stateManager = sm
 
-    render(h(Kanban, { stateManager, i18n: this.options.i18n }), this.rootEl)
+    render(h(Kanban, { stateManager: sm, i18n: this.options.i18n }), this.rootEl)
   }
 
   onClose(): void {
+    // 不清理 _stateManager，保留给下次 onOpen 复用（避免 close→open 循环时丢失内容）。
+    // 标记为待回收，让 onOpen 可以安全判断。
+    this._previousState = this._stateManager
+    // flush 未落盘的改动，但不 dispose stateManager
     this._stateManager?.saveToDisk(true)
-    this._stateManager?.dispose()
     this._stateManager = undefined
   }
 

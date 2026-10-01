@@ -26,7 +26,7 @@ export class KanbanStateManager {
   private saveTimer: number | null = null
   private _selfWrite = false
   private collapsedMap = new Map<number, boolean>()
-  private disposed = false
+  private _disposed = false
 
   constructor(
     private view: KanbanView,
@@ -149,13 +149,17 @@ export class KanbanStateManager {
     return true
   }
 
+  get disposed(): boolean {
+    return this._disposed
+  }
+
   dispose(): void {
     if (this.disposed) return
     // flush 未落盘的改动
     if (this.saveTimer !== null) {
       this.saveToDisk(true)
     }
-    this.disposed = true
+    this._disposed = true
     this.stateReceivers.clear()
     this.settingNotifiers.clear()
     this.actions.clear()
