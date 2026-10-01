@@ -4,9 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  '@typora-community-plugin/core': link:../typora-community-plugin@v2/packages/core
-
 importers:
 
   .:
@@ -52,8 +49,8 @@ importers:
         specifier: npm:@typora-community-plugin/typora-types@^1.0.16
         version: '@typora-community-plugin/typora-types@1.0.16'
       '@typora-community-plugin/core':
-        specifier: link:../typora-community-plugin@v2/packages/core
-        version: link:../typora-community-plugin@v2/packages/core
+        specifier: ^2.10.35
+        version: 2.10.35
       archiver:
         specifier: ^5.3.2
         version: 5.3.2
@@ -819,6 +816,9 @@ packages:
     resolution: {integrity: sha512-dfUnCxiN9H4ap84DvD2ubjw+3vUNpstxa0TneY/Paat8a3R4uQZDLSvWjmznAY/DoahqTHl9V46HF/Zs3F29pg==}
     engines: {node: '>= 10.0.0'}
 
+  '@plylrnsdy/decorate.js@1.0.4':
+    resolution: {integrity: sha512-Sj6CnM2NC4vuTUYoGtxSOrlehfaQRariXIZ1L4TyQEls7r1eXahYgXcJkwqP+2g+v+NHyM1lXwZOOs5iic4P+Q==}
+
   '@rollup/plugin-babel@6.0.4':
     resolution: {integrity: sha512-YF7Y52kFdFT/xVSuVdjkV5ZdX/3YtmX0QulG+x0taQOtJdHYzVU61aSSkAgVJ7NOv6qPkIYiJSgSWWN/DM5sGw==}
     engines: {node: '>=14.0.0'}
@@ -1022,6 +1022,9 @@ packages:
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
 
+  '@typora-community-plugin/core@2.10.35':
+    resolution: {integrity: sha512-96X3Y8sNFp6raKsrJJydvisR8dBJdruWzaOltmD1c/O1cmZH4Y3BAXic1ladwmcLjj4sDUtBzdIe4CfTl0ne1w==}
+
   '@typora-community-plugin/esbuild-plugin-typora@1.0.12':
     resolution: {integrity: sha512-iOEM8e0Y7/83dqVHm2HX9XglL0BD0t4NTbH4PKtea7ohrOxI/frkWb4nHW4iMoxp5mVBdCf5QUpcm3H6DeIfdQ==}
 
@@ -1209,12 +1212,12 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   glob@8.1.0:
     resolution: {integrity: sha512-r8hpEjiQEYlF2QU0df3dS+nxxSIreXQS1qRhMJM0Q5NDdR386C7jb7Hwwod8Fgiuex+k0GFjgft18yvxm5XoCQ==}
     engines: {node: '>=12'}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   globals@11.12.0:
     resolution: {integrity: sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==}
@@ -2310,6 +2313,10 @@ snapshots:
       '@parcel/watcher-win32-x64': 2.5.1
     optional: true
 
+  '@plylrnsdy/decorate.js@1.0.4':
+    dependencies:
+      typescript: 5.8.3
+
   '@rollup/plugin-babel@6.0.4(@babel/core@7.27.1)(rollup@4.40.2)':
     dependencies:
       '@babel/core': 7.27.1
@@ -2444,6 +2451,10 @@ snapshots:
   '@types/node@16.18.0': {}
 
   '@types/resolve@1.20.2': {}
+
+  '@typora-community-plugin/core@2.10.35':
+    dependencies:
+      '@plylrnsdy/decorate.js': 1.0.4
 
   '@typora-community-plugin/esbuild-plugin-typora@1.0.12': {}
 

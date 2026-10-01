@@ -67,7 +67,6 @@
     "groupDate": "日期",
     "groupArchive": "归档",
     "groupTags": "标签",
-    "groupIntegration": "集成",
     "laneWidth": "列宽",
     "laneWidthDesc": "每个列表的宽度，单位为 rem（1rem ≈ 16px）。",
     "showCheckboxes": "显示复选框",
@@ -106,10 +105,6 @@
     "tagActionDesc": "点击标签时执行的操作。",
     "optionTagActionNone": "不执行操作",
     "optionTagActionSearch": "在看板内搜索",
-    "autoOpen": "自动打开看板文件",
-    "autoOpenDesc": "打开含看板 frontmatter 的 Markdown 文件时自动进入看板视图。",
-    "autoOpenKanbanExtension": "自动打开 *.kanban.md 为看板",
-    "autoOpenKanbanExtensionDesc": "以 .kanban.md / .kanban.markdown 结尾的文件打开时默认使用看板视图（无需 frontmatter）。",
     "showSearch": "显示搜索按钮",
     "showBoardSettings": "显示看板设置按钮"
   },

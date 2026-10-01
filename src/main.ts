@@ -72,8 +72,6 @@ export default class extends Plugin<KanbanSettings> {
     localePath: path.join(this.manifest.dir!, 'locales'),
   })
 
-  private _autoOpenGuard = 0
-
   onload() {
     ensurePreactDomShims()
 
@@ -84,8 +82,10 @@ export default class extends Plugin<KanbanSettings> {
     this.registerSettingTab(new KanbanSettingTab({ settings: this.settings, i18n: this.i18n }))
 
     // --- 自定义视图 ---------------------------------------------------------
+    // 注册 `*.kanban.md` / `*.kanban.markdown` 扩展：workspace 打开这些文件时
+    // 会自动通过 `viewManager.getTypeByPath` 创建 `KanbanView`，无需手动监听事件。
     this.register(
-      this.app.viewManager.registerView(KanbanView.type, leaf => new KanbanView(leaf, {
+      this.app.viewManager.registerViewWithExtensions(KanbanView.extensions, KanbanView.type, leaf => new KanbanView(leaf, {
         app: this.app,
         i18n: this.i18n,
         getGlobalSettings: () => this.getGlobalSettings(),
@@ -164,7 +164,6 @@ export default class extends Plugin<KanbanSettings> {
     })
 
     // --- 工作区 / 文件事件 ---------------------------------------------------
-    this.register(this.app.workspace.on('file:open', filePath => this.onFileOpen(filePath)))
     this.register(this.app.workspace.on('file:will-save', filePath => this.onFileWillSave(filePath)))
     this.register(this.app.vault.on('file:rename', (oldPath, newPath) => this.onFileRename(oldPath, newPath)))
     this.register(this.app.workspace.on('file-menu', ({ menu, path: filePath }) => this.onFileMenu(menu, filePath)))
@@ -218,7 +217,6 @@ export default class extends Plugin<KanbanSettings> {
     if (!filePath || filePath.startsWith('typ://')) return
     if (leaf.viewType === KanbanView.type) return
 
-    this._autoOpenGuard = Date.now()
     const prev = { type: leaf.viewType, state: { ...leaf.state } }
     this.swapLeafView(leaf, KanbanView.type, { path: filePath, _kanbanPrev: prev })
   }
@@ -227,7 +225,6 @@ export default class extends Plugin<KanbanSettings> {
     const prev = leaf.state?._kanbanPrev as { type: string; state: Record<string, unknown> } | undefined
     const filePath: string | undefined = leaf.state?.path ?? this.app.workspace.activeFile
 
-    this._autoOpenGuard = Date.now()
     this.swapLeafView(leaf, prev?.type ?? 'core.markdown', prev?.state ?? { path: filePath })
   }
 
@@ -319,11 +316,6 @@ export default class extends Plugin<KanbanSettings> {
 
   // --- 事件处理 -----------------------------------------------------------
 
-  private isKanbanExtension(file: string): boolean {
-    const base = path.basename(file)
-    return /\.kanban\.(md|markdown)$/i.test(base)
-  }
-
   private isKanbanFile(filePath: string): boolean {
     if (!/\.(md|markdown)$/i.test(filePath)) return false
     try {
@@ -332,28 +324,6 @@ export default class extends Plugin<KanbanSettings> {
     catch {
       return false
     }
-  }
-
-  private onFileOpen(filePath: string): void {
-    if (Date.now() - this._autoOpenGuard < 1000) return
-
-    const leaf = this.app.workspace.activeLeaf
-    if (!leaf || leaf.viewType === KanbanView.type) return
-    if (leaf.state?.path !== filePath) return
-
-    let match: boolean
-    if (this.settings.get('auto-open-kanban-extension') && this.isKanbanExtension(filePath)) {
-      match = true
-    }
-    else if (this.settings.get('auto-open')) {
-      match = this.isKanbanFile(filePath)
-    }
-    else {
-      return
-    }
-    if (!match) return
-
-    this.openAsKanban(leaf)
   }
 
   private onFileWillSave(filePath: string): void {

@@ -107,13 +107,6 @@ export function getSettingGroups(t: KanbanLocale): SettingGroupDef[] {
         },
       ],
     },
-    {
-      title: s.groupIntegration,
-      items: [
-        { key: 'auto-open-kanban-extension', label: s.autoOpenKanbanExtension, description: s.autoOpenKanbanExtensionDesc, type: 'checkbox' },
-        { key: 'auto-open', label: s.autoOpen, description: s.autoOpenDesc, type: 'checkbox' },
-      ],
-    },
   ]
 }
 

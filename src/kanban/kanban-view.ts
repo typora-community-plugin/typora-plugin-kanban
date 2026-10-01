@@ -21,6 +21,9 @@ export class KanbanView extends WorkspaceView {
 
   static type = 'typora-plugin-kanban.board'
 
+  /** `*.kanban.md` / `*.kanban.markdown` 由 workspace 按扩展名解析到此视图。 */
+  static extensions = ['kanban.md', 'kanban.markdown']
+
   containerEl: HTMLElement = document.createElement('div')
   icon = 'fa-columns'
 
@@ -48,6 +51,14 @@ export class KanbanView extends WorkspaceView {
   }
 
   onOpen(): void {
+    // 视图可能被反复 open/close（切换标签页、切换视图类型），先清理上一次的挂载点。
+    if (this.rootEl) {
+      render(null, this.rootEl)
+      this.rootEl.remove()
+      this.rootEl = undefined
+    }
+    this.containerEl.innerHTML = ''
+
     this.rootEl = document.createElement('div')
     this.rootEl.className = 'typ-kanban-root'
     this.containerEl.appendChild(this.rootEl)
@@ -68,7 +79,6 @@ export class KanbanView extends WorkspaceView {
 
   onClose(): void {
     this._stateManager?.saveToDisk(true)
-    if (this.rootEl) render(null, this.rootEl)
     this._stateManager?.dispose()
     this._stateManager = undefined
   }

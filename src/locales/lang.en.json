@@ -67,7 +67,6 @@
     "groupDate": "Date",
     "groupArchive": "Archive",
     "groupTags": "Tags",
-    "groupIntegration": "Integration",
     "laneWidth": "Lane width",
     "laneWidthDesc": "Width of each list, in rem (1rem ≈ 16px).",
     "showCheckboxes": "Show checkboxes",
@@ -106,10 +105,6 @@
     "tagActionDesc": "What happens when a tag is clicked.",
     "optionTagActionNone": "Do nothing",
     "optionTagActionSearch": "Search the board",
-    "autoOpen": "Auto-open kanban files",
-    "autoOpenDesc": "Open markdown files with kanban frontmatter as a board.",
-    "autoOpenKanbanExtension": "Auto-open *.kanban.md as board",
-    "autoOpenKanbanExtensionDesc": "Open files ending in .kanban.md / .kanban.markdown in the kanban view by default (no frontmatter required).",
     "showSearch": "Show search button",
     "showBoardSettings": "Show board settings button"
   },
