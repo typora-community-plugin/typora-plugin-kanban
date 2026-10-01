@@ -8,9 +8,11 @@ import type { Item, Path } from '../../types'
  * Phase 4：点击切换 `checked` / `checkChar` 并即时持久化。
  * Phase 5：拖入 `shouldMarkItemsComplete` lane 时自动勾选（在此联动）。
  */
-export function ItemCheckbox(props: { item: Item; path: Path }) {
-  const { item, path } = props
+export function ItemCheckbox(props: { item: Item; path: Path; showCheckboxes?: boolean }) {
+  const { item, path, showCheckboxes = true } = props
   const { modifiers } = useKanban()
+
+  if (!showCheckboxes) return null
 
   const toggle = () => {
     const checked = !item.checked

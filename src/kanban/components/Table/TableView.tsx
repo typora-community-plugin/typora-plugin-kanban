@@ -5,6 +5,7 @@ import { ItemCheckbox } from '../Item/ItemCheckbox'
 import { ItemContent } from '../Item/ItemContent'
 import { ItemMenu } from '../Item/ItemMenu'
 import { itemMatches, laneMatches } from '../../search'
+import { useKanbanSetting } from '../../state-manager'
 import type { Board, Item, Lane } from '../../types'
 
 interface TableRow { lane: Lane; laneIndex: number; item: Item; itemIndex: number }
@@ -12,8 +13,9 @@ interface TableRow { lane: Lane; laneIndex: number; item: Item; itemIndex: numbe
 /** Table View：卡片扁平化，列 = Card / List / Date / Tags (+ 各 inline field)。 */
 export function TableView(props: { board: Board }) {
   const { board } = props
-  const { i18n, searchQuery } = useKanban()
+  const { i18n, searchQuery, stateManager } = useKanban()
   const t = i18n.t
+  const showCheckboxes = useKanbanSetting(stateManager, 'show-checkboxes')
 
   // 各 inline field 的动态列。
   const fieldKeys = useMemo(() => {
@@ -58,7 +60,7 @@ export function TableView(props: { board: Board }) {
             return (
               <tr key={item.id} class={item.checked ? 'is-checked' : ''}>
                 <td class={c('table-card')}>
-                  <ItemCheckbox item={item} path={path} />
+                  <ItemCheckbox item={item} path={path} showCheckboxes={showCheckboxes} />
                   <ItemContent item={item} path={path} hideMetadata />
                   <ItemMenu path={path} />
                 </td>
