@@ -2,9 +2,9 @@
 
 English | [中文](./README.zh-CN.md)
 
-This a plugin based on [typora-community-plugin][core] for [Typora](https://typora.io).
+This is a plugin based on [typora-community-plugin][core] for [Typora](https://typora.io). Inspired by [obsidian-kanban](https://github.com/community-archive/obsidian-kanban).
 
-Render Markdown files as an interactive Kanban board. Heading sections become lists and `- [ ]` items become draggable cards — add, rename, reorder, archive and search without leaving Markdown, since every change is written straight back to the file.
+Render Markdown files as an interactive Kanban board: `##` headings become lists and `- [ ]` items become draggable cards — add, rename, reorder, archive and search without leaving Markdown, since every change is written straight back to the file.
 
 ## Features
 
@@ -30,7 +30,7 @@ kanban-plugin: board
 
 ## Todo
 
-- [ ] Write the parser #dev {{priority:: high}} @2024-01-01
+- [ ] Write the parser #dev [priority:: high] @2024-01-01
 
 ## Done
 
@@ -39,7 +39,7 @@ kanban-plugin: board
 
 - A `## Heading` starts a new list.
 - `- [ ]` / `- [x]` is a card; checkbox state is kept in sync.
-- `#tag`, `{{key:: value}}` and `@YYYY-MM-DD` (optionally with `HH:mm`) are parsed automatically.
+- `#tag`, `[key:: value]` (or `(key:: value)`) and `@YYYY-MM-DD` (optionally with `HH:mm`) are parsed automatically.
 
 ## Commands
 

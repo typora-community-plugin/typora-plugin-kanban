@@ -7,7 +7,7 @@ kanban-settings:
 ## Todo
 
 - [ ] 设计数据模型 #design @2026-09-29
-- [ ] 实现 Markdown 解析器 {{priority:: high}}
+- [ ] 实现 Markdown 解析器 [priority:: high]
 - [ ] 编写 parser round-trip 测试
 
 ## Doing

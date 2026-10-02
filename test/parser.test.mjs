@@ -71,7 +71,7 @@ roundTrip(
 roundTrip(
   'tags / inline field / date',
   '## Lane\n\n'
-  + '- [ ] Task title #tag/a {{due:: 2024-02-01}} @2024-01-01\n'
+  + '- [ ] Task title #tag/a [due:: 2024-02-01] @2024-01-01\n'
 )
 
 // 4. 归档块
@@ -109,7 +109,7 @@ check('frontmatter flag / settings', () => {
 })
 
 check('metadata extraction', () => {
-  const { titleRaw, title, metadata } = parseInlineMetadata('Task title #tag/a {{due:: 2024-02-01}} @2024-01-01')
+  const { titleRaw, title, metadata } = parseInlineMetadata('Task title #tag/a [due:: 2024-02-01] @2024-01-01')
   assert.equal(titleRaw, 'Task title')
   assert.equal(title, 'Task title')
   assert.deepEqual(metadata.tags, ['#tag/a'])

@@ -2,7 +2,7 @@
 
 [English](./README.md) | 中文
 
-这是一个基于 [typora-community-plugin][core] 的 [Typora](https://typoraio.cn) 插件。
+这是一个基于 [typora-community-plugin][core] 的 [Typora](https://typoraio.cn) 插件。受 [obsidian-kanban](https://github.com/community-archive/obsidian-kanban) 启发。
 
 将 Markdown 文件渲染为可交互的看板：`##` 标题作为列表，`- [ ]` 条目作为可拖拽卡片。新增、重命名、排序、归档与搜索都在 Markdown 中完成，所有改动会即时写回文件。
 
@@ -30,7 +30,7 @@ kanban-plugin: board
 
 ## Todo
 
-- [ ] 编写解析器 #dev {{priority:: high}} @2024-01-01
+- [ ] 编写解析器 #dev [priority:: high] @2024-01-01
 
 ## Done
 
@@ -39,7 +39,7 @@ kanban-plugin: board
 
 - `## 标题` 开始一个新列表。
 - `- [ ]` / `- [x]` 是一张卡片，勾选状态会被同步。
-- `#标签`、`{{key:: value}}` 与 `@YYYY-MM-DD`（可带 `HH:mm`）会被自动解析。
+- `#标签`、`[key:: value]`（或 `(key:: value)`）与 `@YYYY-MM-DD`（可带 `HH:mm`）会被自动解析。
 
 ## 命令
 

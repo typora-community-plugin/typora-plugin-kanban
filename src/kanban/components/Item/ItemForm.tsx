@@ -10,7 +10,7 @@ import { createItem } from '../../types'
  * 列底部「+ Add a card」。
  *
  * Enter 创建（Shift+Enter 换行）；插入位置依 `new-card-insertion-method`；
- * 内容经 `parseInlineMetadata` 识别 `#tag` / `@date` / `key:: value`，新建后自动进入编辑。
+ * 内容经 `parseInlineMetadata` 识别 `#tag` / `@date` / `[key:: value]`，新建后自动进入编辑。
  */
 export function ItemForm(props: { laneIndex: number }) {
   const { laneIndex } = props

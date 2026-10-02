@@ -17,7 +17,7 @@ interface RawItem { raw: string; checked: boolean; checkChar: Item['checkChar'] 
  *   1. `parseFrontmatter` 拆分 frontmatter / body（无 frontmatter 时 body = 全文）
  *   2. 抽取归档块 `<!-- kanban:archive -->…<!-- /kanban:archive -->`
  *   3. 正文按 `^##\s+(.+)$` 切分 Lane；`#` 顶级标题与非列表散句忽略
- *   4. 每 Lane：`- [ ] title #tag {{key:: val}}` → Item；缩进/续行追加到上一 Item
+ *   4. 每 Lane：`- [ ] title #tag [key:: val]` → Item；缩进/续行追加到上一 Item
  *   5. 归档块内列表 → `board.data.archive`
  *   6. 空 board → `lanes = []`（View 显示唯一 LaneForm）
  */

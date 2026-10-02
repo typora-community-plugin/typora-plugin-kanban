@@ -4,7 +4,10 @@ interface Span { start: number; end: number }
 interface FieldSpan extends Span { key: string; value: string; isDate: boolean }
 interface TagSpan extends Span { tag: string }
 
-const BRACE_FIELD_RE = /\{\{([^:}]+?)::\s*([\s\S]*?)\}\}/g
+const INLINE_FIELD_WRAPPERS: Readonly<Record<string, string>> = Object.freeze({
+  '[': ']',
+  '(': ')',
+})
 const BARE_FIELD_RE = /(^|\s)([A-Za-z0-9_\u4e00-\u9fa5][\w\u4e00-\u9fa5/-]*)::[ \t]*([^\n]*?)(?=\s+[A-Za-z0-9_\u4e00-\u9fa5][\w\u4e00-\u9fa5/-]*::|\s+[#@]|$)/gm
 const TAG_RE = /(^|\s)#([\w\u4e00-\u9fa5/-]+)/g
 const AT_DATE_RE = /@(\d{4}-\d{2}-\d{2})(?:[ T](\d{2}:\d{2}))?/g
@@ -17,7 +20,7 @@ const DATE_VALUE_RE = /^\d{4}-\d{2}-\d{2}$/
  * 拆分 item 内容为 `titleRaw`（不含 metadata token）、`title`（纯文本）与 `metadata`。
  *
  * 处理顺序（避免互相误吞）：
- *   1. 提取 `{{key:: value}}`
+ *   1. 提取包裹式 `[key:: value]` / `(key:: value)`
  *   2. 提取裸 `key:: value`（`due/start/date` + 日期 → 归入 date，不视为 inlineField）
  *   3. 提取 `#tag`
  *   4. 提取 `@YYYY-MM-DD[ HH:mm]` / `due|start|date:: 日期`
@@ -31,12 +34,12 @@ export function parseInlineMetadata(raw: string): {
   title: string
   metadata: ItemMetadata
 } {
-  const braceFields = findBraceFields(raw)
-  const maskedBrace = maskSpans(raw, braceFields)
+  const wrappedFields = findWrappedFields(raw)
+  const maskedWrapped = maskSpans(raw, wrappedFields)
 
-  const bareFields = findBareFields(maskedBrace)
+  const bareFields = findBareFields(maskedWrapped)
   const moveFields = bareFields.filter(f => !f.isDate)
-  const maskedBare = maskSpans(maskedBrace, moveFields)
+  const maskedBare = maskSpans(maskedWrapped, moveFields)
 
   const tagSpans = findTags(maskedBare)
   const maskedTags = maskSpans(maskedBare, tagSpans)
@@ -44,11 +47,11 @@ export function parseInlineMetadata(raw: string): {
   const { date, time, spans: dateSpans } = findDateTokens(maskedTags)
 
   const inlineFields: InlineField[] = [
-    ...braceFields.map(f => ({ key: f.key, value: f.value })),
+    ...wrappedFields.map(f => ({ key: f.key, value: f.value })),
     ...moveFields.map(f => ({ key: f.key, value: f.value })),
   ]
 
-  const titleRaw = normalizeTitle(removeSpans(raw, [...braceFields, ...moveFields, ...tagSpans, ...dateSpans]))
+  const titleRaw = normalizeTitle(removeSpans(raw, [...wrappedFields, ...moveFields, ...tagSpans, ...dateSpans]))
 
   const metadata: ItemMetadata = {}
   if (date) metadata.date = date
@@ -65,7 +68,7 @@ export function serializeInlineMetadata(item: Item): string {
   if (item.titleRaw) parts.push(item.titleRaw)
   if (item.metadata.tags?.length) parts.push(item.metadata.tags.join(' '))
   if (item.metadata.inlineFields?.length) {
-    parts.push(item.metadata.inlineFields.map(f => `{{${f.key}:: ${f.value}}}`).join(' '))
+    parts.push(item.metadata.inlineFields.map(f => `[${f.key}:: ${f.value}]`).join(' '))
   }
   const date = serializeDate(item.metadata)
   if (date) parts.push(date)
@@ -74,22 +77,22 @@ export function serializeInlineMetadata(item: Item): string {
 
 /** 提取 `#tag`（含 `#` 前缀）。行首的 `#...` 视为标题，不提取。 */
 export function extractTags(raw: string): string[] {
-  return findTags(maskSpans(raw, findBraceFields(raw))).map(t => t.tag)
+  return findTags(maskSpans(raw, findWrappedFields(raw))).map(t => t.tag)
 }
 
-/** 提取 inline fields（`{{key:: value}}` 优先，裸 `key:: value` 回退）。 */
+/** 提取 inline fields（`[key:: value]` / `(key:: value)` 优先，裸 `key:: value` 回退）。 */
 export function extractInlineFields(raw: string): InlineField[] {
-  const braceFields = findBraceFields(raw)
-  const bareFields = findBareFields(maskSpans(raw, braceFields)).filter(f => !f.isDate)
+  const wrappedFields = findWrappedFields(raw)
+  const bareFields = findBareFields(maskSpans(raw, wrappedFields)).filter(f => !f.isDate)
   return [
-    ...braceFields.map(f => ({ key: f.key, value: f.value })),
+    ...wrappedFields.map(f => ({ key: f.key, value: f.value })),
     ...bareFields.map(f => ({ key: f.key, value: f.value })),
   ]
 }
 
 /** 识别 `@YYYY-MM-DD` / `@YYYY-MM-DD HH:mm` / `due|start|date:: 日期`。 */
 export function parseDateTokens(raw: string): { date?: string; time?: string } {
-  const { date, time } = findDateTokens(maskSpans(raw, findBraceFields(raw)))
+  const { date, time } = findDateTokens(maskSpans(raw, findWrappedFields(raw)))
   const result: { date?: string; time?: string } = {}
   if (date) result.date = date
   if (time) result.time = time
@@ -104,14 +107,71 @@ function serializeDate(metadata: ItemMetadata): string {
   return ''
 }
 
-function findBraceFields(raw: string): FieldSpan[] {
+/** 扫描所有 `[key:: value]` / `(key:: value)` 包裹式字段（支持括号嵌套与转义）。 */
+function findWrappedFields(raw: string): FieldSpan[] {
   const out: FieldSpan[] = []
-  BRACE_FIELD_RE.lastIndex = 0
-  let m: RegExpExecArray | null
-  while ((m = BRACE_FIELD_RE.exec(raw))) {
-    out.push({ key: m[1].trim(), value: m[2].trim(), isDate: false, start: m.index, end: BRACE_FIELD_RE.lastIndex })
+  for (const [open, close] of Object.entries(INLINE_FIELD_WRAPPERS)) {
+    let foundIndex = raw.indexOf(open)
+    while (foundIndex >= 0) {
+      const field = parseWrappedField(raw, foundIndex, open, close)
+      if (!field) {
+        foundIndex = raw.indexOf(open, foundIndex + 1)
+        continue
+      }
+      out.push(field)
+      foundIndex = raw.indexOf(open, field.end)
+    }
   }
-  return out
+  return out.sort((a, b) => a.start - b.start)
+}
+
+/** 尝试解析起始于 `start`（包裹符）的单个字段，失败返回 `undefined`。 */
+function parseWrappedField(
+  raw: string,
+  start: number,
+  open: string,
+  close: string
+): FieldSpan | undefined {
+  const sep = raw.indexOf('::', start + 1)
+  if (sep < 0) return undefined
+
+  const key = raw.substring(start + 1, sep).trim()
+  // key 中不允许出现任何包裹符
+  for (const c of [...Object.keys(INLINE_FIELD_WRAPPERS), ...Object.values(INLINE_FIELD_WRAPPERS)]) {
+    if (key.includes(c)) return undefined
+  }
+
+  const closing = findClosing(raw, sep + 2, open, close)
+  if (!closing) return undefined
+
+  return { key, value: closing.value, isDate: false, start, end: closing.endIndex }
+}
+
+/** 从 `start` 起寻找匹配的闭合符，支持嵌套与 `\` 转义。 */
+function findClosing(
+  raw: string,
+  start: number,
+  open: string,
+  close: string
+): { value: string; endIndex: number } | undefined {
+  let nesting = 0
+  let escaped = false
+  for (let i = start; i < raw.length; i++) {
+    const char = raw.charAt(i)
+    if (char === '\\') {
+      escaped = !escaped
+      continue
+    }
+    if (escaped) {
+      escaped = false
+      continue
+    }
+    if (char === open) nesting++
+    else if (char === close) nesting--
+    if (nesting < 0) return { value: raw.substring(start, i).trim(), endIndex: i + 1 }
+    escaped = false
+  }
+  return undefined
 }
 
 function findBareFields(raw: string): FieldSpan[] {
