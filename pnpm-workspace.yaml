@@ -4,4 +4,5 @@ allowBuilds:
   '@parcel/watcher': false
   esbuild: true
 minimumReleaseAgeExclude:
-  - '@typora-community-plugin/core@2.10.35'
+  - '@typora-community-plugin/core@2.10.39'
+  - '@typora-community-plugin/rollup-plugin-typora@1.1.2'
