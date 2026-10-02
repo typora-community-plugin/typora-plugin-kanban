@@ -1,6 +1,7 @@
 import { createItem, createLane, type Board, type Item } from '../types'
 import { extractBoardSettings, parseFrontmatter } from './frontmatter'
 import { parseInlineMetadata } from './inline-metadata'
+import { hasCollapsedMarker, stripCollapsedMarker } from './lane-collapse'
 
 const ARCHIVE_RE = /<!--\s*kanban:archive\s*-->([\s\S]*?)<!--\s*\/kanban:archive\s*-->/
 const LANE_HEADING_RE = /^##\s+(.+?)\s*$/
@@ -31,6 +32,7 @@ export function mdToBoard(opts: { path: string; md: string }): Board {
   const lanes = splitLanes(bodyWithoutArchive).map(section => {
     const lane = createLane(section.title)
     lane.items = parseItems(section.content)
+    if (section.collapsed) lane.collapsed = true
     return lane
   })
 
@@ -46,22 +48,26 @@ export function mdToBoard(opts: { path: string; md: string }): Board {
   }
 }
 
-function splitLanes(body: string): Array<{ title: string; content: string }> {
-  const sections: Array<{ title: string; content: string }> = []
-  let current: { title: string; lines: string[] } | null = null
+function splitLanes(body: string): Array<{ title: string; content: string; collapsed: boolean }> {
+  const sections: Array<{ title: string; content: string; collapsed: boolean }> = []
+  let current: { title: string; lines: string[]; collapsed: boolean } | null = null
 
   for (const line of body.split(/\r?\n/)) {
     const heading = LANE_HEADING_RE.exec(line)
     if (heading) {
-      if (current) sections.push({ title: current.title, content: current.lines.join('\n') })
-      current = { title: heading[1], lines: [] }
+      if (current) sections.push({ title: current.title, content: current.lines.join('\n'), collapsed: current.collapsed })
+      current = {
+        title: stripCollapsedMarker(heading[1]),
+        lines: [],
+        collapsed: hasCollapsedMarker(heading[1]),
+      }
     }
     else if (current) {
       current.lines.push(line)
     }
     // 首个 `##` 之前的散句 / `#` 顶级标题：忽略
   }
-  if (current) sections.push({ title: current.title, content: current.lines.join('\n') })
+  if (current) sections.push({ title: current.title, content: current.lines.join('\n'), collapsed: current.collapsed })
 
   return sections
 }

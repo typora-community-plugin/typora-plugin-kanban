@@ -98,7 +98,8 @@ export function createBoardModifiers(m: KanbanStateManager): BoardModifiers {
 
     updateLane(path, patch) {
       const isCollapseOnly = 'collapsed' in patch && Object.keys(patch).length === 1
-      if (isCollapseOnly) {
+      // 「记住折叠的列表」开启时把折叠态写入标题后的 HTML 注释，故需要落盘。
+      if (isCollapseOnly && !m.getSetting('list-collapse')) {
         m.setState(b => updateLane(b, path, patch), { save: false })
       } else {
         set(b => updateLane(b, path, patch))

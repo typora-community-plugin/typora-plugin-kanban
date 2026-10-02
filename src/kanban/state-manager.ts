@@ -25,7 +25,6 @@ export class KanbanStateManager {
   private actions = new Map<string, () => void>()
   private saveTimer: number | null = null
   private _selfWrite = false
-  private collapsedMap = new Map<number, boolean>()
   private _disposed = false
 
   constructor(
@@ -34,6 +33,7 @@ export class KanbanStateManager {
     private options: KanbanStateManagerOptions = {},
   ) {
     this.board = initial
+    this.applyCollapseSetting()
   }
 
   setState(next: Board | ((prev: Board) => Board), opts?: { save?: boolean }): void {
@@ -77,9 +77,8 @@ export class KanbanStateManager {
   }
 
   newBoard(path: string, md: string): Board {
-    const board = mdToBoard({ path, md })
-    this.applyCollapsed(board)
-    this.board = board
+    this.board = mdToBoard({ path, md })
+    this.applyCollapseSetting()
     this.notify()
     return this.board
   }
@@ -169,23 +168,16 @@ export class KanbanStateManager {
     for (const cb of this.stateReceivers) cb(this.board)
   }
 
-  private applyCollapsed(board: Board): void {
-    board.lanes.forEach((lane, i) => {
-      const c = this.collapsedMap.get(i)
-      if (c !== undefined) lane.collapsed = c
-    })
-  }
-
-  private syncCollapsed(): void {
-    this.collapsedMap.clear()
-    this.board.lanes.forEach((lane, i) => {
-      if (lane.collapsed) this.collapsedMap.set(i, true)
-    })
+  private applyCollapseSetting(): void {
+    // 未开启「记住折叠的列表」时，忽略文件中残留的折叠标记。
+    if (this.getSetting('list-collapse')) return
+    for (const lane of this.board.lanes) {
+      if (lane.collapsed) lane.collapsed = false
+    }
   }
 
   private flush(): void {
-    this.syncCollapsed()
-    const md = boardToMd(this.board)
+    const md = boardToMd(this.board, { persistCollapsed: this.getSetting('list-collapse') })
     this._selfWrite = true
     try {
       this.view.writeFile(md)

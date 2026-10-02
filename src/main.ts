@@ -3,6 +3,7 @@ import {
   Plugin, I18n, PluginSettings, Notice, openInputBox,
   path, fs, type WorkspaceLeaf,
 } from '@typora-community-plugin/core'
+import type { InternalContextMenu } from '@typora-community-plugin/core/typings/ui/components/menu'
 import { KanbanView } from './kanban/kanban-view'
 import { KanbanSettingTab } from './settings/setting-tab'
 import { openBoardSettingsModal } from './kanban/ui/board-settings-modal'
@@ -342,9 +343,8 @@ export default class extends Plugin<KanbanSettings> {
     }
   }
 
-  private onFileMenu(menu: unknown, filePath: string): void {
+  private onFileMenu(menu: InternalContextMenu, filePath: string): void {
     const t = this.i18n.t
-    const m = menu as { addItem(build: (item: FileMenuItem) => void): void }
 
     const isMd = /\.(md|markdown)$/i.test(filePath)
 
@@ -354,14 +354,14 @@ export default class extends Plugin<KanbanSettings> {
         l => l.viewType === KanbanView.type && l.state?.path === filePath)
 
       if (isKanban) {
-        m.addItem(item => item
+        menu.addItem(item => item
           .setKey('kanban:open-as-kanban')
           .setTitle(t.menu.openAsKanban)
           .setIcon('columns')
           .onClick(() => this.openPathAsKanban(filePath)))
       }
       if (openKanbanView) {
-        m.addItem(item => item
+        menu.addItem(item => item
           .setKey('kanban:open-as-markdown')
           .setTitle(t.menu.openAsMarkdown)
           .setIcon('file-text-o')
@@ -370,7 +370,7 @@ export default class extends Plugin<KanbanSettings> {
     }
     else if (!path.extname(filePath)) {
       // 无扩展名 → 视为文件夹。
-      m.addItem(item => item
+      menu.addItem(item => item
         .setKey('kanban:new-board')
         .setTitle(t.menu.newBoard)
         .setIcon('columns')
