@@ -354,14 +354,14 @@ export default class extends Plugin<KanbanSettings> {
         l => l.viewType === KanbanView.type && l.state?.path === filePath)
 
       if (isKanban) {
-        menu.addItem(item => item
+        menu.insertItemAfter('[data-action="open_in_new_window"]', item => item
           .setKey('kanban:open-as-kanban')
           .setTitle(t.menu.openAsKanban)
           .setIcon('columns')
           .onClick(() => this.openPathAsKanban(filePath)))
       }
       if (openKanbanView) {
-        menu.addItem(item => item
+        menu.insertItemAfter('[data-action="open_in_new_window"]', item => item
           .setKey('kanban:open-as-markdown')
           .setTitle(t.menu.openAsMarkdown)
           .setIcon('file-text-o')
@@ -370,7 +370,7 @@ export default class extends Plugin<KanbanSettings> {
     }
     else if (!path.extname(filePath)) {
       // 无扩展名 → 视为文件夹。
-      menu.addItem(item => item
+      menu.insertItemAfter('[data-action="new_folder"]', item => item
         .setKey('kanban:new-board')
         .setTitle(t.menu.newBoard)
         .setIcon('columns')
