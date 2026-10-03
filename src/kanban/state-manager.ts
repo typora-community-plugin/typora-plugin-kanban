@@ -1,3 +1,4 @@
+import type { App } from '@typora-community-plugin/core'
 import type { Board } from './types'
 import type { KanbanSettings } from '../settings/settings'
 import { defaultSettings } from '../settings/settings'
@@ -34,6 +35,11 @@ export class KanbanStateManager {
   ) {
     this.board = initial
     this.applyCollapseSetting()
+  }
+
+  /** 视图所属的 Typora App（供组件访问 `features.markdownRenderer` 等能力）。 */
+  get app(): App {
+    return this.view.app
   }
 
   setState(next: Board | ((prev: Board) => Board), opts?: { save?: boolean }): void {

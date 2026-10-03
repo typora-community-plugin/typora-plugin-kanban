@@ -1,58 +1,45 @@
 /**
- * 卡片标题的行内 Markdown 渲染。
+ * 卡片内容的 Markdown 渲染。
  *
- * 复用 Typora 内置解析器 `editor.MarkParser.parseInline()`：它输出的 HTML 含
- * 源码标记（`<span class="md-meta">**</span>`），在编辑器里由 CSS 隐藏；看板容器
- * 不在 `#write` 下，故此处主动剔除 `.md-meta` 得到干净的富文本。
+ * 复用 Typora 内置的块级渲染器 `app.features.markdownRenderer.renderTo()`：
+ * 与行内解析器不同，它支持嵌套块（引用、列表、代码块、表格、公式等）。
+ * 渲染后主动剔除源码标记 `.md-meta`，并按搜索词高亮命中片段。
  */
 
-import { editor, MathJax } from "typora"
-
-interface TyporaMarkParser {
-  /** 将行内 Markdown 解析为 HTML。 */
-  parseInline(markdown: string): string
-}
-
-interface TyporaEditor {
-  MarkParser?: TyporaMarkParser
-}
-
-function getTyporaEditor() {
-  return editor as TyporaEditor
-}
-
-/** 触发 Typora 的 MathJax 渲染行内公式（`parseInline` 产出的是待处理节点）。 */
-export function typesetInlineMath(root: HTMLElement): void {
-  const nodes = [...root.querySelectorAll<HTMLElement>('.math-jax-preprocess')]
-  if (!nodes.length) return
-  void MathJax.typesetPromise(nodes).catch(() => undefined)
-}
+import type { App } from '@typora-community-plugin/core'
 
 /**
- * 将 `text` 渲染为行内富文本 HTML；搜索命中片段包裹为 `mark`。
- * 解析器不可用（非 Typora 环境）时回退为纯文本。
+ * 将 `md` 渲染为块级 HTML 写入 `targetEl`；搜索命中片段包裹为 `mark`。
+ * 渲染器不可用（非 Typora 环境）或抛错时回退为纯文本。
  */
-export function renderInlineMarkdown(text: string, query = ''): string {
-  const container = document.createElement('div')
-  const parser = getTyporaEditor()?.MarkParser
+export function renderMarkdownBlock(
+  md: string,
+  targetEl: HTMLElement,
+  app?: App,
+  query = '',
+): void {
+  targetEl.textContent = ''
 
-  if (parser) {
+  const renderer = app?.features?.markdownRenderer
+  if (renderer) {
     try {
-      container.innerHTML = parser.parseInline(text)
+      renderer.renderTo(md, targetEl)
     } catch {
-      container.textContent = text
+      targetEl.textContent = md
     }
   } else {
-    container.textContent = text
+    targetEl.textContent = md
   }
 
-  container.querySelectorAll('.md-meta').forEach(el => el.remove())
+  // `renderTo` 使用 Typora 标记解析器，输出含源码标记；看板容器不在 `#write` 下，主动剔除。
+  targetEl.querySelectorAll('.md-meta').forEach(el => el.remove())
 
   const q = query.trim()
-  if (q) highlightTextNodes(container, q)
-
-  return container.innerHTML
+  if (q) highlightTextNodes(targetEl, q)
 }
+
+/** 高亮时跳过的容器（代码块 / 公式由各自渲染器接管其 DOM）。 */
+const HIGHLIGHT_SKIP_SELECTOR = 'pre.md-fences, .md-fences, .CodeMirror, .math-jax-preprocess, mjx-container, .MathJax'
 
 /** 遍历文本节点，把命中 `query`（不区分大小写）的片段包裹为 `mark`。 */
 function highlightTextNodes(root: Node, query: string): void {
@@ -63,7 +50,11 @@ function highlightTextNodes(root: Node, query: string): void {
   let node = walker.nextNode()
   while (node) {
     const text = node as Text
-    if (text.nodeValue && text.nodeValue.toLowerCase().includes(q)) targets.push(text)
+    const parent = text.parentElement
+    const skippable = parent?.closest(HIGHLIGHT_SKIP_SELECTOR)
+    if (!skippable && text.nodeValue && text.nodeValue.toLowerCase().includes(q)) {
+      targets.push(text)
+    }
     node = walker.nextNode()
   }
 

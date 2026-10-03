@@ -1,15 +1,18 @@
-import { useEffect, useMemo, useRef } from 'preact/hooks'
-import { renderInlineMarkdown, typesetInlineMath } from '../../utils/markdown'
+import { useEffect, useRef } from 'preact/hooks'
+import { useKanban } from '../context'
+import { renderMarkdownBlock } from '../../utils/markdown'
 
-/** 把行内 Markdown 渲染为富文本（`text` 为原始 markdown）。 */
+/** 把块级 Markdown 渲染为富文本（`text` 为原始 markdown，支持嵌套块）。 */
 export function MarkdownInline(props: { text: string; query?: string }) {
   const { text, query = '' } = props
-  const ref = useRef<HTMLSpanElement>(null)
-  const html = useMemo(() => renderInlineMarkdown(text, query), [text, query])
+  const { stateManager } = useKanban()
+  const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (ref.current) typesetInlineMath(ref.current)
-  }, [html])
+    const el = ref.current
+    if (!el) return
+    renderMarkdownBlock(text, el, stateManager.app, query)
+  }, [text, query, stateManager])
 
-  return <span ref={ref} dangerouslySetInnerHTML={{ __html: html }} />
+  return <div ref={ref} />
 }
