@@ -7,6 +7,7 @@ const ARCHIVE_RE = /<!--\s*kanban:archive\s*-->([\s\S]*?)<!--\s*\/kanban:archive
 const LANE_HEADING_RE = /^##\s+(.+?)\s*$/
 const CHECKBOX_ITEM_RE = /^[-*+]\s+\[(.)\]\s*(.*)$/
 const PLAIN_ITEM_RE = /^[-*+]\s+(.*)$/
+const LEADING_INDENT_RE = /^(\s+)/
 
 interface RawItem { raw: string; checked: boolean; checkChar: Item['checkChar'] }
 
@@ -79,20 +80,26 @@ function parseItems(content: string): Item[] {
   for (const line of content.split(/\r?\n/)) {
     if (line.trim() === '') continue
 
+    // Detect leading indentation — nested list items are sub-content, not new cards
+    const indentMatch = LEADING_INDENT_RE.exec(line)
+    const hasIndent = !!indentMatch
+
     const checkbox = CHECKBOX_ITEM_RE.exec(line)
     const plain = PLAIN_ITEM_RE.exec(line)
 
-    if (checkbox) {
+    if (checkbox && !hasIndent) {
+      // Only top-level checkbox items become new cards; nested ones are sub-content
       const checkChar = normalizeCheckChar(checkbox[1])
       current = { raw: checkbox[2], checked: checkChar !== ' ', checkChar }
       rawItems.push(current)
     }
-    else if (plain) {
+    else if (plain && !hasIndent) {
+      // Only top-level plain list items become new cards
       current = { raw: plain[1], checked: false, checkChar: ' ' }
       rawItems.push(current)
     }
     else if (current) {
-      // 缩进续行 / 非列表散句 → 追加到上一 Item（保留原文）
+      // indented lines / non-list content → append to previous Item as sub-content
       current.raw += '\n' + line
     }
   }

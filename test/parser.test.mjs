@@ -138,6 +138,26 @@ check('archive parsed into data.archive', () => {
   assert.equal(board.data.archive[0].titleRaw, 'old')
 })
 
+check('nested items become sub-content of parent card', () => {
+  const md = '## Todo\n\n- [ ] todo item\n  - [x] phase 1\n  - [ ] phase 2\n'
+  const board = mdToBoard({ path: '/nested.md', md })
+  assert.equal(board.lanes[0].items.length, 1, 'should produce exactly 1 card')
+  const item = board.lanes[0].items[0]
+  // normalizeTitle strips indentation from continuation lines, so sub-content appears without indent
+  assert.ok(item.titleRaw.includes('todo item'))
+  assert.ok(item.titleRaw.includes('- [x] phase 1'), 'phase 1 should appear as sub-content')
+  assert.ok(item.titleRaw.includes('- [ ] phase 2'), 'phase 2 should appear as sub-content')
+})
+
+check('round-trip preserves nested items (serialize uses tab for continuation)', () => {
+  const md = '## Todo\n\n- [ ] todo item\n  - [x] phase 1\n  - [ ] phase 2\n'
+  const board = mdToBoard({ path: '/rt.md', md })
+  const output = boardToMd(board)
+  // serialize uses tab for sub-content continuation lines
+  const expected = '## Todo\n\n- [ ] todo item\n\t- [x] phase 1\n\t- [ ] phase 2\n'
+  assert.equal(output, expected)
+})
+
 console.log('Phase 10 — vault samples round-trip')
 
 const vaultDir = path.join(testDir, 'vault')

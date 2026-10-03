@@ -56,5 +56,16 @@ function serializeArchive(archive: Item[]): string {
 }
 
 function serializeItem(item: Item): string {
-  return `- [${item.checkChar}] ${serializeInlineMetadata(item)}`
+  const serialized = serializeInlineMetadata(item)
+  // titleRaw may contain multi-line sub-content (nested lists from parse).
+  // Sub-content lines already preserve their indentation from the source.
+  // We just need to output each line on its own line.
+  const idx = serialized.indexOf('\n')
+  if (idx < 0) {
+    return `- [${item.checkChar}] ${serialized}`
+  }
+  const firstLine = serialized.slice(0, idx)
+  const rest = serialized.slice(idx + 1)
+  // Each continuation line becomes a nested list item indented with tab
+  return `- [${item.checkChar}] ${firstLine}\n\t${rest.replace(/\r?\n/g, '\n\t')}`
 }
