@@ -4,6 +4,7 @@ import { useKanban } from '../context'
 import { useKanbanSetting } from '../../state-manager'
 import { c } from '../helpers'
 import { Highlight } from '../search/Highlight'
+import { MarkdownInline } from './MarkdownInline'
 import { DatePicker } from './DatePicker'
 import { TimePicker } from './TimePicker'
 import { constructCoordinates } from './picker-utils'
@@ -193,7 +194,7 @@ export function ItemContent(props: { item: Item; path: Path; hideMetadata?: bool
 
   return (
     <div class={c('item-content')} onDblClick={startEdit}>
-      <div class={c('item-title')}><Highlight text={item.title} query={searchQuery} /></div>
+      <div class={c('item-title')}><MarkdownInline text={item.titleRaw} query={searchQuery} /></div>
 
       {!hideMetadata && (hasInlineMeta || metaTags.length > 0) && (
         <div class={c('item-metadata')}>
