@@ -38,6 +38,22 @@ export function renderMarkdownBlock(
   if (q) highlightTextNodes(targetEl, q)
 }
 
+/** 输出中渲染为 checkbox 的任务列表标记，如 `- [ ]` / `> 1. [x]`。 */
+const TASK_MARKER_RE = /^([ \t]*(?:>[ \t]*)*(?:[-*+]|\d+[.)])[ \t]+\[)([ xX-])(\])/gm
+
+/**
+ * 翻转 `titleRaw` 中第 `index` 个任务标记的勾选态（与渲染出的 checkbox 顺序一致）。
+ * `index` 越界时原样返回。
+ */
+export function toggleTaskAt(md: string, index: number): string {
+  let i = -1
+  return md.replace(TASK_MARKER_RE, (match, open: string, check: string, close: string) => {
+    i++
+    if (i !== index) return match
+    return open + (check === ' ' ? 'x' : ' ') + close
+  })
+}
+
 /** 高亮时跳过的容器（代码块 / 公式由各自渲染器接管其 DOM）。 */
 const HIGHLIGHT_SKIP_SELECTOR = 'pre.md-fences, .md-fences, .CodeMirror, .math-jax-preprocess, mjx-container, .MathJax'
 

@@ -5,6 +5,7 @@ import { useKanbanSetting } from '../../state-manager'
 import { c } from '../helpers'
 import { Highlight } from '../search/Highlight'
 import { MarkdownInline } from './MarkdownInline'
+import { toggleTaskAt } from '../../utils/markdown'
 import { DatePicker } from './DatePicker'
 import { TimePicker } from './TimePicker'
 import { constructCoordinates } from './picker-utils'
@@ -194,7 +195,13 @@ export function ItemContent(props: { item: Item; path: Path; hideMetadata?: bool
 
   return (
     <div class={c('item-content')} onDblClick={startEdit}>
-      <div class={c('item-title')}><MarkdownInline text={item.titleRaw} query={searchQuery} /></div>
+      <div class={c('item-title')}>
+        <MarkdownInline
+          text={item.titleRaw}
+          query={searchQuery}
+          onToggleTask={index => modifiers.updateItem(path, { titleRaw: toggleTaskAt(item.titleRaw, index) })}
+        />
+      </div>
 
       {!hideMetadata && (hasInlineMeta || metaTags.length > 0) && (
         <div class={c('item-metadata')}>
