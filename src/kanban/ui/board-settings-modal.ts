@@ -17,12 +17,15 @@ export function openBoardSettingsModal(stateManager: KanbanStateManager, i18n: K
     body.classList.add('typ-kanban-board-settings-body')
 
     for (const group of getSettingGroups(i18n.t)) {
+      const items = group.items.filter(def => !def.globalOnly)
+      if (!items.length) continue
+
       const title = document.createElement('h3')
       title.className = 'typ-setting-title'
       title.textContent = group.title
       body.append(title)
 
-      for (const def of group.items) {
+      for (const def of items) {
         const item = new SettingItem()
         renderSettingControl(item, def, stateManager.getSetting(def.key), value => {
           stateManager.setSetting(def.key, value as never)

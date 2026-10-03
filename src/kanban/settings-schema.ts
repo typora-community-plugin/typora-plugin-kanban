@@ -12,6 +12,8 @@ export interface SettingControlDef {
   options?: SelectOption[]
   min?: number
   max?: number
+  /** 仅全局设置页显示（板级设置 Modal 忽略，如影响视图注册的插件级开关）。 */
+  globalOnly?: boolean
 }
 
 export interface SettingGroupDef {
@@ -46,6 +48,7 @@ export function getSettingGroups(t: KanbanLocale): SettingGroupDef[] {
         },
         { key: 'show-search', label: s.showSearch, type: 'checkbox' },
         { key: 'show-board-settings', label: s.showBoardSettings, type: 'checkbox' },
+        { key: 'auto-open-kanban', label: s.autoOpenKanban, description: s.autoOpenKanbanDesc, type: 'checkbox', globalOnly: true },
       ],
     },
     {

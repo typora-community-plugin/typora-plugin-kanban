@@ -27,6 +27,7 @@ export type KanbanSettings = {
   'list-collapse': boolean
   'show-search': boolean
   'show-board-settings': boolean
+  'auto-open-kanban': boolean               // `*.kanban.md` 自动以看板视图打开
 }
 
 /** 所有设置键（用于遍历 / 全局设置快照）。 */
@@ -50,6 +51,7 @@ export const kanbanSettingKeys = [
   'list-collapse',
   'show-search',
   'show-board-settings',
+  'auto-open-kanban',
 ] as const satisfies readonly (keyof KanbanSettings)[]
 
 export const defaultSettings: KanbanSettings = {
@@ -72,4 +74,5 @@ export const defaultSettings: KanbanSettings = {
   'list-collapse': false,
   'show-search': true,
   'show-board-settings': true,
+  'auto-open-kanban': true,
 }

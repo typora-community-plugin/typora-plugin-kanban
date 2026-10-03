@@ -119,7 +119,9 @@
     "optionTagActionNone": "Nichts tun",
     "optionTagActionSearch": "Das Board durchsuchen",
     "showSearch": "Suchschaltfläche anzeigen",
-    "showBoardSettings": "Board-Einstellungsschaltfläche anzeigen"
+    "showBoardSettings": "Board-Einstellungsschaltfläche anzeigen",
+    "autoOpenKanban": "Kanban-Boards automatisch öffnen",
+    "autoOpenKanbanDesc": "Dateien mit der Endung `.kanban.md` direkt in der Kanban-Board-Ansicht öffnen."
   },
   "notice": {
     "boardCreated": "Kanban-Board erstellt: {path}",

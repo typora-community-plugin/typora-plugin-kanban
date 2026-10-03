@@ -119,7 +119,9 @@
     "optionTagActionNone": "不执行操作",
     "optionTagActionSearch": "在看板内搜索",
     "showSearch": "显示搜索按钮",
-    "showBoardSettings": "显示看板设置按钮"
+    "showBoardSettings": "显示看板设置按钮",
+    "autoOpenKanban": "自动以看板视图打开",
+    "autoOpenKanbanDesc": "以 `.kanban.md` 结尾的文件直接以看板视图打开。"
   },
   "notice": {
     "boardCreated": "已创建看板：{path}",

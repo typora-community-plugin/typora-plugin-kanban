@@ -119,7 +119,9 @@
     "optionTagActionNone": "Do nothing",
     "optionTagActionSearch": "Search the board",
     "showSearch": "Show search button",
-    "showBoardSettings": "Show board settings button"
+    "showBoardSettings": "Show board settings button",
+    "autoOpenKanban": "Auto-open Kanban boards",
+    "autoOpenKanbanDesc": "Open files with the `.kanban.md` extension directly in the Kanban board view."
   },
   "notice": {
     "boardCreated": "Created kanban board: {path}",

@@ -73,25 +73,33 @@ export default class extends Plugin<KanbanSettings> {
     localePath: path.join(this.manifest.dir!, 'locales'),
   })
 
+  /** 当前 `.kanban.md` 扩展名映射的注销函数；`auto-open-kanban` 关闭时为空。 */
+  private kanbanExtensionsDispose?: () => void
+
   onload() {
     ensurePreactDomShims()
 
     // --- 设置 ---------------------------------------------------------------
     this.registerSettings(new PluginSettings<KanbanSettings>(this.app, this.manifest, { version: 1 }))
     this.settings.setDefault(defaultSettings)
-    this.register(this.settings.addChangeListener('*', () => this.notifySettingsChanged()))
+    this.register(this.settings.addChangeListener('*', () => {
+      this.applyKanbanExtensions()
+      this.notifySettingsChanged()
+    }))
     this.registerSettingTab(new KanbanSettingTab({ settings: this.settings, i18n: this.i18n }))
 
     // --- 自定义视图 ---------------------------------------------------------
-    // 注册 `*.kanban.md` / `*.kanban.markdown` 扩展：workspace 打开这些文件时
-    // 会自动通过 `viewManager.getTypeByPath` 创建 `KanbanView`，无需手动监听事件。
+    // 视图类型始终注册（右键「Open as kanban board」/ 命令可手动切换）；
+    // 是否将 `.kanban.md` 扩展名自动映射到该视图由 `auto-open-kanban` 设置控制。
     this.register(
-      this.app.viewManager.registerViewWithExtensions(KanbanView.extensions, KanbanView.type, leaf => new KanbanView(leaf, {
+      this.app.viewManager.registerView(KanbanView.type, leaf => new KanbanView(leaf, {
         app: this.app,
         i18n: this.i18n,
         getGlobalSettings: () => this.getGlobalSettings(),
         openAsMarkdown: l => this.openAsMarkdown(l),
       })))
+    this.register(() => this.kanbanExtensionsDispose?.())
+    this.applyKanbanExtensions()
 
     // --- 命令 ---------------------------------------------------------------
     const t = this.i18n.t
@@ -180,6 +188,18 @@ export default class extends Plugin<KanbanSettings> {
     const out: Partial<KanbanSettings> = {}
     for (const key of kanbanSettingKeys) out[key] = this.settings.get(key)
     return out
+  }
+
+  /** 按 `auto-open-kanban` 注册 / 注销 `*.kanban.md` → 看板视图的扩展名映射。 */
+  private applyKanbanExtensions(): void {
+    const enabled = !!this.settings.get('auto-open-kanban')
+    if (enabled && !this.kanbanExtensionsDispose) {
+      this.kanbanExtensionsDispose =
+        this.app.viewManager.registerExtensions([...KanbanView.extensions], KanbanView.type)
+    } else if (!enabled && this.kanbanExtensionsDispose) {
+      this.kanbanExtensionsDispose()
+      this.kanbanExtensionsDispose = undefined
+    }
   }
 
   private notifySettingsChanged(): void {
