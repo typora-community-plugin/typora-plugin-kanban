@@ -116,7 +116,6 @@ export function BoardHeader(props: BoardHeaderProps) {
         onClick={onArchiveAll}
       >
         <Icon name="fa-archive" />
-        <span>{t.board.archiveAll}</span>
       </button>
 
       <button
@@ -127,7 +126,6 @@ export function BoardHeader(props: BoardHeaderProps) {
         onClick={() => stateManager.runAction('view-as-markdown')}
       >
         <Icon name="fa-file-text-o" />
-        <span>{t.board.viewAsMarkdown}</span>
       </button>
 
       {showBoardSettings && (
