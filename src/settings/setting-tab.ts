@@ -1,7 +1,7 @@
 import { SettingTab, type PluginSettings } from '@typora-community-plugin/core'
-import type { KanbanI18n } from '../kanban/i18n'
-import type { KanbanSettings } from '../kanban/settings'
-import { getSettingGroups, renderSettingControl } from '../kanban/settings-schema'
+import type { KanbanI18n } from '../i18n'
+import type { KanbanSettings } from './settings'
+import { getSettingGroups, renderSettingControl } from './settings-schema'
 
 export interface KanbanSettingsHost {
   settings: PluginSettings<KanbanSettings>

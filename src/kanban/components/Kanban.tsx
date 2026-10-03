@@ -11,8 +11,8 @@ import { BoardHeader } from './BoardHeader/BoardHeader'
 import { confirmDialog } from '../ui/confirm'
 import { laneMatches } from '../search'
 import { dragStore } from '../dnd/drag-store'
-import type { KanbanI18n } from '../i18n'
-import type { KanbanViewMode } from '../settings'
+import type { KanbanI18n } from '../../i18n'
+import type { KanbanViewMode } from '../../settings/settings'
 
 /**
  * 根组件。

@@ -1,4 +1,4 @@
-import type { KanbanSettings } from '../settings'
+import type { KanbanSettings } from '../../settings/settings'
 
 export interface ParsedFrontmatter {
   frontmatter: Record<string, unknown>

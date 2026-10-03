@@ -2,8 +2,8 @@ import { createContext } from 'preact'
 import { useContext } from 'preact/hooks'
 import type { KanbanStateManager } from '../state-manager'
 import type { BoardModifiers } from '../board-modifiers'
-import type { KanbanI18n } from '../i18n'
-import type { KanbanViewMode } from '../settings'
+import type { KanbanI18n } from '../../i18n'
+import type { KanbanViewMode } from '../../settings/settings'
 
 export interface KanbanContextValue {
   stateManager: KanbanStateManager

@@ -2,7 +2,7 @@ import { useKanban } from '../context'
 import { c } from '../helpers'
 import { DropdownMenu } from '../Menu/DropdownMenu'
 import { confirmDialog } from '../../ui/confirm'
-import { fmt } from '../../i18n'
+import { fmt } from '../../../i18n'
 import type { Lane } from '../../types'
 
 /** 列菜单：Rename / Collapse / Archive cards / Delete list。 */

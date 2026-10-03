@@ -1,4 +1,4 @@
-import type { KanbanSettings } from './settings'
+import type { KanbanSettings } from '../settings/settings'
 
 /** [laneIndex, itemIndex?] */
 export type Path = number[]

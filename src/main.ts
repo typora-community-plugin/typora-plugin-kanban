@@ -8,8 +8,8 @@ import { KanbanView } from './kanban/kanban-view'
 import { KanbanSettingTab } from './settings/setting-tab'
 import { openBoardSettingsModal } from './kanban/ui/board-settings-modal'
 import { hasKanbanFlag, parseFrontmatter } from './kanban/parsers/frontmatter'
-import { kanbanSettingKeys, defaultSettings, type KanbanSettings, type KanbanViewMode } from './kanban/settings'
-import { fmt, type KanbanLocale } from './kanban/i18n'
+import { kanbanSettingKeys, defaultSettings, type KanbanSettings, type KanbanViewMode } from './settings/settings'
+import { fmt, type KanbanLocale } from './i18n'
 
 
 /** core 右键菜单项的链式 API（`InternalContextMenu` 未从 core 导出，此处结构声明）。 */

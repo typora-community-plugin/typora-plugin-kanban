@@ -6,7 +6,7 @@ import { c } from '../helpers'
 import { Icon } from '../Icon/Icon'
 import { DropdownMenu } from '../Menu/DropdownMenu'
 import { openBoardSettingsModal } from '../../ui/board-settings-modal'
-import type { KanbanViewMode } from '../../settings'
+import type { KanbanViewMode } from '../../../settings/settings'
 
 export interface BoardHeaderProps {
   searchOpen: boolean

@@ -11,7 +11,7 @@ import { constructCoordinates } from './picker-utils'
 import { parseInlineMetadata, serializeInlineMetadata, setItemDate, setItemTime } from '../../parsers/inline-metadata'
 import { daysFromToday, formatDate, parseDate } from '../../utils/date'
 import { parseTagColors, parseTagSort, sortTags, tagStyle } from '../../utils/tags'
-import { fmt } from '../../i18n'
+import { fmt } from '../../../i18n'
 import type { Item, Path } from '../../types'
 
 /**

@@ -1,6 +1,6 @@
 import type { Board } from './types'
-import type { KanbanSettings } from './settings'
-import { defaultSettings } from './settings'
+import type { KanbanSettings } from '../settings/settings'
+import { defaultSettings } from '../settings/settings'
 import { mdToBoard } from './parsers/parse-markdown'
 import { boardToMd } from './parsers/serialize'
 import type { KanbanView } from './kanban-view'

@@ -1,7 +1,7 @@
 import { Modal, SettingItem } from '@typora-community-plugin/core'
-import type { KanbanI18n } from '../i18n'
+import type { KanbanI18n } from '../../i18n'
 import type { KanbanStateManager } from '../state-manager'
-import { getSettingGroups, renderSettingControl } from '../settings-schema'
+import { getSettingGroups, renderSettingControl } from '../../settings/settings-schema'
 
 /**
  * 板级设置 Modal。

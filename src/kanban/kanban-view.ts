@@ -3,8 +3,8 @@ import { WorkspaceView, fs, type App, type WorkspaceLeaf } from '@typora-communi
 import { Kanban } from './components/Kanban'
 import { KanbanStateManager } from './state-manager'
 import { mdToBoard } from './parsers/parse-markdown'
-import type { KanbanI18n } from './i18n'
-import type { KanbanSettings } from './settings'
+import type { KanbanI18n } from '../i18n'
+import type { KanbanSettings } from '../settings/settings'
 
 export interface KanbanViewOptions {
   app: App

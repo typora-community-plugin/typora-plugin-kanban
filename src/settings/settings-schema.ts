@@ -1,5 +1,5 @@
 import type { SettingItem } from '@typora-community-plugin/core'
-import type { KanbanLocale } from './i18n'
+import type { KanbanLocale } from '../i18n'
 import type { KanbanSettings } from './settings'
 
 export interface SelectOption { label: string; value: string }
