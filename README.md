@@ -6,6 +6,10 @@ This is a plugin based on [typora-community-plugin][core] for [Typora](https://t
 
 Render Markdown files as an interactive Kanban board: `##` headings become lists and `- [ ]` items become draggable cards — add, rename, reorder, archive and search without leaving Markdown, since every change is written straight back to the file.
 
+## Preview
+
+![](./docs/assets/base.jpg)
+
 ## Features
 
 - **Markdown as the single source of truth** — a file with `kanban-plugin` frontmatter opens as a board.

@@ -6,6 +6,10 @@
 
 将 Markdown 文件渲染为可交互的看板：`##` 标题作为列表，`- [ ]` 条目作为可拖拽卡片。新增、重命名、排序、归档与搜索都在 Markdown 中完成，所有改动会即时写回文件。
 
+## 预览
+
+![](./docs/assets/base.jpg)
+
 ## 功能
 
 - **Markdown 即数据源** — 含 `kanban-plugin` frontmatter 的文件以看板打开。
