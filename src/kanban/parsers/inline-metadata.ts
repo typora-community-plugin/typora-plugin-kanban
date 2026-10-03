@@ -75,6 +75,29 @@ export function serializeInlineMetadata(item: Item): string {
   return parts.join(' ')
 }
 
+/**
+ * 设置 / 清除日期。清除日期时一并清除时间（时间依附于日期，见 `serializeDate`）。
+ * 对应计划 p4-1 的日期写回逻辑（纯 metadata 更新，`titleRaw` 不含日期 token）。
+ */
+export function setItemDate(metadata: ItemMetadata, date?: string): ItemMetadata {
+  const next: ItemMetadata = { ...metadata }
+  if (date) {
+    next.date = date
+  } else {
+    delete next.date
+    delete next.time
+  }
+  return next
+}
+
+/** 设置 / 清除时间（仅修改 metadata.time）。对应计划 p4-2。 */
+export function setItemTime(metadata: ItemMetadata, time?: string): ItemMetadata {
+  const next: ItemMetadata = { ...metadata }
+  if (time) next.time = time
+  else delete next.time
+  return next
+}
+
 /** 提取 `#tag`（含 `#` 前缀）。行首的 `#...` 视为标题，不提取。 */
 export function extractTags(raw: string): string[] {
   return findTags(maskSpans(raw, findWrappedFields(raw))).map(t => t.tag)

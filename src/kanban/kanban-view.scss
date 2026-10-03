@@ -375,6 +375,20 @@
   color: var(--typ-kanban-date-color);
 }
 
+.typ-kanban-item-metadata-time {
+  color: var(--typ-kanban-date-color);
+}
+
+.typ-kanban-item-metadata-date.is-clickable,
+.typ-kanban-item-metadata-time.is-clickable {
+  cursor: pointer;
+}
+
+.typ-kanban-item-metadata-date.is-clickable:hover,
+.typ-kanban-item-metadata-time.is-clickable:hover {
+  text-decoration: underline;
+}
+
 .typ-kanban-item-metadata-date.is-date-before {
   color: var(--typ-kanban-date-before-color);
 }
@@ -822,3 +836,119 @@ body.typ-kanban-dragging * {
     animation-duration: 0ms !important;
   }
 }
+
+// --- 日期 / 时间选择器 ------------------------------------------------------
+
+.typ-kanban-picker-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+}
+
+.typ-kanban-picker {
+  position: fixed;
+  z-index: 111;
+  min-width: 13rem;
+  padding: .5rem;
+  border: 1px solid rgb(var(--typ-border-color));
+  border-radius: .375rem;
+  background: var(--bg-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .18);
+}
+
+.typ-kanban-picker-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .375rem;
+  margin-top: .5rem;
+}
+
+.typ-kanban-picker-btn {
+  flex: 1 1 auto;
+  padding: .25rem .5rem;
+  border: 1px solid rgb(var(--typ-border-color));
+  border-radius: .25rem;
+  font: inherit;
+  font-size: .8125rem;
+  color: var(--text-color);
+  background: transparent;
+  cursor: pointer;
+  transition: background 100ms, color 100ms;
+}
+
+.typ-kanban-picker-btn:hover {
+  background: var(--item-hover-bg-color);
+}
+
+.typ-kanban-picker-btn.is-danger {
+  color: var(--typ-kanban-danger-color);
+}
+
+.typ-kanban-date-picker-input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: .375rem .5rem;
+  border: 1px solid rgb(var(--typ-border-color));
+  border-radius: .25rem;
+  font: inherit;
+  font-size: .875rem;
+  color: var(--text-color);
+  background: var(--bg-color);
+}
+
+.typ-kanban-time-picker-list {
+  max-height: 13rem;
+  overflow-y: auto;
+  padding-right: .125rem;
+}
+
+.typ-kanban-time-picker-item {
+  display: flex;
+  align-items: center;
+  gap: .375rem;
+  width: 100%;
+  padding: .25rem .5rem;
+  border: none;
+  border-radius: .25rem;
+  font: inherit;
+  font-size: .8125rem;
+  text-align: left;
+  color: var(--text-color);
+  background: transparent;
+  cursor: pointer;
+}
+
+.typ-kanban-time-picker-item:hover,
+.typ-kanban-time-picker-item:focus {
+  background: var(--item-hover-bg-color);
+  outline: none;
+}
+
+.typ-kanban-time-picker-item.is-hour {
+  font-weight: 600;
+}
+
+.typ-kanban-time-picker-item.is-selected {
+  color: var(--primary-color);
+  background: var(--select-text-bg-color);
+}
+
+.typ-kanban-time-picker-check {
+  width: .75rem;
+  font-size: .75rem;
+  color: var(--primary-color);
+}
+
+.typ-kanban-time-picker-list::-webkit-scrollbar {
+  width: .375rem;
+}
+
+.typ-kanban-time-picker-list::-webkit-scrollbar-thumb {
+  border-radius: .25rem;
+  background: rgb(var(--typ-border-color));
+}
+
+.typ-kanban-time-picker-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+

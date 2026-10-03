@@ -7,7 +7,8 @@ export interface DropdownMenuItem {
   label: string
   icon?: string
   danger?: boolean
-  onClick(): void
+  /** 收到触发鼠标事件（键盘激活时为 `undefined`），供弹出层定位使用。 */
+  onClick(e?: MouseEvent): void
 }
 
 /**
@@ -47,9 +48,9 @@ export function DropdownMenu(props: {
     setOpen(v => !v)
   }
 
-  const run = (item: DropdownMenuItem) => {
+  const run = (item: DropdownMenuItem, e?: MouseEvent) => {
     setOpen(false)
-    item.onClick()
+    item.onClick(e)
   }
 
   return (
@@ -80,7 +81,7 @@ export function DropdownMenu(props: {
                 class={[c('menu-item'), item.danger ? 'is-danger' : ''].filter(Boolean).join(' ')}
                 role="menuitem"
                 tabindex={0}
-                onClick={() => run(item)}
+                onClick={e => run(item, e)}
                 onKeyDown={e => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault()

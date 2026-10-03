@@ -34,3 +34,24 @@ export function daysFromToday(dateStr: string): number | null {
 export function today(format: string): string {
   return formatDate(new Date(), format)
 }
+
+/** 相对今天偏移的日期字符串（先加月再加天）。 */
+export function offsetDate(days: number, months = 0, format = 'YYYY-MM-DD'): string {
+  const d = new Date()
+  d.setMonth(d.getMonth() + months)
+  d.setDate(d.getDate() + days)
+  return formatDate(d, format)
+}
+
+/**
+ * 生成 `HH:mm` 时间选项（默认每 15 分钟，24h 共 96 项）。
+ * 对应计划 p1-3：TimePicker 的候选列表。
+ */
+export function buildTimeArray(stepMinutes = 15): string[] {
+  const pad = (n: number) => String(n).padStart(2, '0')
+  const out: string[] = []
+  for (let m = 0; m < 24 * 60; m += stepMinutes) {
+    out.push(`${pad(Math.floor(m / 60))}:${pad(m % 60)}`)
+  }
+  return out
+}

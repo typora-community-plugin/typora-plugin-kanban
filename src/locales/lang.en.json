@@ -37,6 +37,10 @@
     "addCard": "+ Add a card",
     "titlePlaceholder": "Card title",
     "menu": "Card menu",
+    "addDate": "Add date",
+    "editDate": "Edit date",
+    "addTime": "Add time",
+    "editTime": "Edit time",
     "deleteCard": "Delete card",
     "duplicateCard": "Duplicate card",
     "archiveCard": "Archive card",
@@ -59,6 +63,14 @@
     "yesterday": "Yesterday",
     "inDays": "in {count} days",
     "daysAgo": "{count} days ago"
+  },
+  "picker": {
+    "today": "Today",
+    "inAWeek": "In a week",
+    "inAMonth": "In a month",
+    "clear": "Clear",
+    "date": "Date",
+    "time": "Time"
   },
   "setting": {
     "title": "Kanban",

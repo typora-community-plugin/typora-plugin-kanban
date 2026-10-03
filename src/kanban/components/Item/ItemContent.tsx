@@ -4,7 +4,10 @@ import { useKanban } from '../context'
 import { useKanbanSetting } from '../../state-manager'
 import { c } from '../helpers'
 import { Highlight } from '../search/Highlight'
-import { parseInlineMetadata, serializeInlineMetadata } from '../../parsers/inline-metadata'
+import { DatePicker } from './DatePicker'
+import { TimePicker } from './TimePicker'
+import { constructCoordinates } from './picker-utils'
+import { parseInlineMetadata, serializeInlineMetadata, setItemDate, setItemTime } from '../../parsers/inline-metadata'
 import { daysFromToday, formatDate, parseDate } from '../../utils/date'
 import { parseTagColors, parseTagSort, sortTags, tagStyle } from '../../utils/tags'
 import { fmt } from '../../i18n'
@@ -32,6 +35,7 @@ export function ItemContent(props: { item: Item; path: Path; hideMetadata?: bool
 
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState('')
+  const [picker, setPicker] = useState<{ kind: 'date' | 'time'; x: number; y: number } | null>(null)
   const taRef = useRef<HTMLTextAreaElement>(null)
   const handledRef = useRef(false)
 
@@ -39,6 +43,7 @@ export function ItemContent(props: { item: Item; path: Path; hideMetadata?: bool
   const tagOrder = useMemo(() => parseTagSort(tagSortRaw), [tagSortRaw])
 
   const startEdit = () => {
+    setPicker(null)
     setDraft(serializeInlineMetadata(item))
     handledRef.current = false
     setEditing(true)
@@ -88,6 +93,22 @@ export function ItemContent(props: { item: Item; path: Path; hideMetadata?: bool
     setEditingItemId(null)
   }
 
+  // 行内点击日期 / 时间标签 → 打开对应选择器（计划 p4-4）。
+  const openPicker = (kind: 'date' | 'time', e: MouseEvent | JSX.TargetedKeyboardEvent<HTMLElement>) => {
+    e.stopPropagation()
+    setPicker({ kind, ...constructCoordinates(e, e.currentTarget as Element) })
+  }
+
+  const applyDate = (date?: string) => {
+    modifiers.updateItem(path, { metadata: setItemDate(item.metadata, date) })
+    setPicker(null)
+  }
+
+  const applyTime = (time?: string) => {
+    modifiers.updateItem(path, { metadata: setItemTime(item.metadata, time) })
+    setPicker(null)
+  }
+
   const onKeyDown = (e: JSX.TargetedKeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Escape') {
       e.preventDefault()
@@ -122,10 +143,10 @@ export function ItemContent(props: { item: Item; path: Path; hideMetadata?: bool
     )
   }
 
-  const { date, tags = [], inlineFields = [] } = item.metadata
+  const { date, time, tags = [], inlineFields = [] } = item.metadata
 
   const orderedTags = sortTags(tags, tagOrder)
-  const hasInlineMeta = !!date || inlineFields.length > 0
+  const hasInlineMeta = !!date || !!time || inlineFields.length > 0
   const metaTags = moveTags || hideMetadata ? [] : orderedTags
 
   const renderTag = (tag: string) => {
@@ -177,7 +198,26 @@ export function ItemContent(props: { item: Item; path: Path; hideMetadata?: bool
       {!hideMetadata && (hasInlineMeta || metaTags.length > 0) && (
         <div class={c('item-metadata')}>
           {date && (
-            <span class={[c('item-metadata-date'), dateCls].filter(Boolean).join(' ')}><i class="fa fa-calendar"></i> {dateText}</span>
+            <span
+              class={[c('item-metadata-date'), 'is-clickable', dateCls].filter(Boolean).join(' ')}
+              role="button"
+              tabindex={0}
+              onClick={e => openPicker('date', e as unknown as MouseEvent)}
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPicker('date', e) }
+              }}
+            ><i class="fa fa-calendar"></i> {dateText}</span>
+          )}
+          {time && (
+            <span
+              class={[c('item-metadata-time'), 'is-clickable'].join(' ')}
+              role="button"
+              tabindex={0}
+              onClick={e => openPicker('time', e as unknown as MouseEvent)}
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPicker('time', e) }
+              }}
+            ><i class="fa fa-clock-o"></i> {time}</span>
           )}
           {metaTags.map(renderTag)}
           {inlineFields.map(field => (
@@ -192,6 +232,13 @@ export function ItemContent(props: { item: Item; path: Path; hideMetadata?: bool
         <div class={[c('item-metadata'), c('item-metadata-footer')].join(' ')}>
           {orderedTags.map(renderTag)}
         </div>
+      )}
+
+      {picker?.kind === 'date' && (
+        <DatePicker x={picker.x} y={picker.y} value={date} onChange={applyDate} onClose={() => setPicker(null)} />
+      )}
+      {picker?.kind === 'time' && (
+        <TimePicker x={picker.x} y={picker.y} value={time} onChange={applyTime} onClose={() => setPicker(null)} />
       )}
     </div>
   )

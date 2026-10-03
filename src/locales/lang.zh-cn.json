@@ -37,6 +37,10 @@
     "addCard": "+ 添加卡片",
     "titlePlaceholder": "卡片标题",
     "menu": "卡片菜单",
+    "addDate": "添加日期",
+    "editDate": "编辑日期",
+    "addTime": "添加时间",
+    "editTime": "编辑时间",
     "deleteCard": "删除卡片",
     "duplicateCard": "复制卡片",
     "archiveCard": "归档卡片",
@@ -59,6 +63,14 @@
     "yesterday": "昨天",
     "inDays": "{count} 天后",
     "daysAgo": "{count} 天前"
+  },
+  "picker": {
+    "today": "今天",
+    "inAWeek": "一周后",
+    "inAMonth": "一月后",
+    "clear": "清除",
+    "date": "日期",
+    "time": "时间"
   },
   "setting": {
     "title": "看板",
