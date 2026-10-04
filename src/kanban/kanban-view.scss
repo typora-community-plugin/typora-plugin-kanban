@@ -109,7 +109,7 @@
 .typ-kanban-board {
   display: flex;
   flex: 1 1 auto;
-  align-items: flex-start;
+  align-items: stretch;
   gap: .75rem;
   min-height: 0;
   padding: .75rem;
