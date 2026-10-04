@@ -35,7 +35,7 @@
   },
   "item": {
     "addCard": "+ Add a card",
-    "titlePlaceholder": "Card title",
+    "contentPlaceholder": "Card title or content",
     "menu": "Card menu",
     "addDate": "Add date",
     "editDate": "Edit date",

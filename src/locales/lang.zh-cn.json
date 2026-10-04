@@ -35,7 +35,7 @@
   },
   "item": {
     "addCard": "+ 添加卡片",
-    "titlePlaceholder": "卡片标题",
+    "contentPlaceholder": "卡片标题或内容",
     "menu": "卡片菜单",
     "addDate": "添加日期",
     "editDate": "编辑日期",

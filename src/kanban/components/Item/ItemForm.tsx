@@ -9,20 +9,29 @@ import { createItem } from '../../types'
 /**
  * 列底部「+ Add a card」。
  *
- * Enter 创建（Shift+Enter 换行）；插入位置依 `new-card-insertion-method`；
- * 内容经 `parseInlineMetadata` 识别 `#tag` / `@date` / `[key:: value]`，新建后自动进入编辑。
+ * 打开即进入「标题 + 内容」合并编辑（单个 textarea）：Enter 换行、Shift+Enter 创建并退出编辑；
+ * 插入位置依 `new-card-insertion-method`；内容经 `parseInlineMetadata` 识别 `#tag` / `@date` / `[key:: value]`。
  */
 export function ItemForm(props: { laneIndex: number }) {
   const { laneIndex } = props
-  const { stateManager, modifiers, setEditingItemId, i18n } = useKanban()
+  const { stateManager, modifiers, i18n } = useKanban()
   const insertionMethod = useKanbanSetting(stateManager, 'new-card-insertion-method')
 
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState('')
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
+  const resize = () => {
+    const ta = inputRef.current
+    if (!ta) return
+    ta.style.height = 'auto'
+    ta.style.height = `${ta.scrollHeight}px`
+  }
+
   useEffect(() => {
-    if (open) inputRef.current?.focus()
+    if (!open) return
+    inputRef.current?.focus()
+    resize()
   }, [open])
 
   const submit = () => {
@@ -38,7 +47,6 @@ export function ItemForm(props: { laneIndex: number }) {
     else modifiers.appendItems([laneIndex], [item])
     setValue('')
     setOpen(false)
-    setEditingItemId(item.id)
   }
 
   const onKeyDown = (e: JSX.TargetedKeyboardEvent<HTMLTextAreaElement>) => {
@@ -47,7 +55,7 @@ export function ItemForm(props: { laneIndex: number }) {
       setValue('')
       setOpen(false)
     }
-    else if (e.key === 'Enter' && !e.shiftKey) {
+    else if (e.key === 'Enter' && e.shiftKey) {
       e.preventDefault()
       submit()
     }
@@ -73,8 +81,11 @@ export function ItemForm(props: { laneIndex: number }) {
         class={c('item-form-input')}
         rows={1}
         value={value}
-        placeholder={i18n.t.item.titlePlaceholder}
-        onInput={e => setValue((e.target as HTMLTextAreaElement).value)}
+        placeholder={i18n.t.item.contentPlaceholder}
+        onInput={e => {
+          setValue((e.target as HTMLTextAreaElement).value)
+          resize()
+        }}
         onKeyDown={onKeyDown}
         onBlur={() => { if (!value.trim()) setOpen(false) }}
       />

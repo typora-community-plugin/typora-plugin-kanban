@@ -9,7 +9,7 @@ export interface KanbanContextValue {
   stateManager: KanbanStateManager
   modifiers: BoardModifiers
   i18n: KanbanI18n
-  /** 正在编辑标题的 item id（含新建卡片自动进入编辑）。 */
+  /** 正在编辑标题的 item id。 */
   editingItemId: string | null
   setEditingItemId(id: string | null): void
   /** 正在编辑标题的 lane id。 */

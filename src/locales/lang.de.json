@@ -35,7 +35,7 @@
   },
   "item": {
     "addCard": "+ Karte hinzufügen",
-    "titlePlaceholder": "Kartentitel",
+    "contentPlaceholder": "Kartentitel oder Inhalt",
     "menu": "Kartenmenü",
     "addDate": "Datum hinzufügen",
     "editDate": "Datum bearbeiten",
