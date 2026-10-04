@@ -333,10 +333,9 @@
   background: var(--item-hover-bg-color);
 }
 
-// 编辑态：outline accent 色
+// 编辑态：卡片本身不再高亮，只高亮编辑框
 .typ-kanban-item.is-editing {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 1px var(--primary-color);
+  /* no border/highlight on the card itself */
 }
 
 .typ-kanban-item-content {
