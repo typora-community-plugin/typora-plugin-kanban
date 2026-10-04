@@ -16,7 +16,7 @@ export class KanbanSettingTab extends SettingTab {
   }
 
   get name() {
-    return this.host.i18n.t.setting.title
+    return 'Kanban'
   }
 
   onload() {
