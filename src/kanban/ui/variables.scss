@@ -11,13 +11,13 @@
 
 :root {
   // tag chip（Typora 未提供对应变量）
-  --typ-kanban-tag-color: var(--primary-color);
-  --typ-kanban-tag-bg-color: rgba(128, 128, 128, .18);
+  --typ-kanban-tag-color: #00965e;
+  --typ-kanban-tag-bg-color: rgba(0, 150, 94, 0.05);
 
   // 日期（自定义语义色）
   --typ-kanban-date-color: var(--text-color);
   --typ-kanban-date-before-color: #c0392b;  // 已过期
-  --typ-kanban-date-after-color: #27ae60;   // 未来
+  --typ-kanban-date-after-color: var(--primary-color);   // 未来
   --typ-kanban-date-today-color: var(--primary-color);
 
   // 搜索命中
