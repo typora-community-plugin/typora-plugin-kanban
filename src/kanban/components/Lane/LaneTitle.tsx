@@ -65,6 +65,9 @@ export function LaneTitle(props: { lane: Lane; index: number }) {
         ref={inputRef}
         class={c('lane-title-input')}
         value={draft}
+        spellcheck={false}
+        autocorrect="off"
+        autocapitalize="off"
         onInput={e => setDraft((e.target as HTMLInputElement).value)}
         onKeyDown={onKeyDown}
         onBlur={() => { if (!handledRef.current) commit() }}

@@ -71,6 +71,9 @@ export function LaneForm(props: {
             class={c('lane-form-input')}
             value={value}
             placeholder={i18n.t.lane.titlePlaceholder}
+            spellcheck={false}
+            autocorrect="off"
+            autocapitalize="off"
             onInput={e => setValue((e.target as HTMLInputElement).value)}
             onKeyDown={onKeyDown}
             onBlur={() => { if (!value.trim()) setOpen(false) }}

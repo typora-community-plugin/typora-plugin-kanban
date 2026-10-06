@@ -134,6 +134,9 @@ export function ItemContent(props: { item: Item; path: Path; hideMetadata?: bool
           class={c('item-title-input')}
           value={draft}
           rows={1}
+          spellcheck={false}
+          autocorrect="off"
+          autocapitalize="off"
           onInput={e => {
             setDraft((e.target as HTMLTextAreaElement).value)
             resize()

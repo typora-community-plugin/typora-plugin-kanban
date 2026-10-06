@@ -78,6 +78,9 @@ export function BoardHeader(props: BoardHeaderProps) {
                 type="search"
                 value={searchQuery}
                 placeholder={t.board.searchPlaceholder}
+                spellcheck={false}
+                autocorrect="off"
+                autocapitalize="off"
                 onInput={e => onSearchQuery((e.target as HTMLInputElement).value)}
                 onKeyDown={onSearchKeyDown}
               />

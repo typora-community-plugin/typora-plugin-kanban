@@ -82,6 +82,9 @@ export function ItemForm(props: { laneIndex: number }) {
         rows={1}
         value={value}
         placeholder={i18n.t.item.contentPlaceholder}
+        spellcheck={false}
+        autocorrect="off"
+        autocapitalize="off"
         onInput={e => {
           setValue((e.target as HTMLTextAreaElement).value)
           resize()
